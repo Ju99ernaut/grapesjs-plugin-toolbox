@@ -1,0 +1,30 @@
+{
+  "name": "grapesjs-plugin-toolbox",
+  "version": "1.0.0",
+  "description": "Grapesjs Plugin Toolbox",
+  "main": "dist/grapesjs-plugin-toolbox.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ju99ernaut/grapesjs-plugin-toolbox.git"
+  },
+  "scripts": {
+    "start": "grapesjs-cli serve",
+    "build": "grapesjs-cli build",
+    "build:css": "node-sass src/styles.scss dist/grapesjs-plugin-toolbox.min.css --output-style compressed",
+    "bump": "npm version patch -m 'Bump v%s'"
+  },
+  "keywords": [
+    "grapesjs",
+    "plugin",
+    "tools"
+  ],
+  "devDependencies": {
+    "grapesjs-cli": "^1.0.12",
+    "node-sass": "^4.14.1"
+  },
+  "author": "Brendon Ngirazi",
+  "license": "MIT",
+  "dependencies": {
+    "colorthief": "^2.3.2"
+  }
+}
