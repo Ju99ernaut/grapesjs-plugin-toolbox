@@ -9,7 +9,16 @@ export default (editor, opts = {}) => {
   const options = {
     ...{
       i18n: {},
-      // default options
+      // label for grid block
+      labelGrid: 'CSS Grid',
+      // category for grid block
+      categoryGrid: 'Basic',
+      // options to extend grid block
+      gridBlock: {},
+      // options to extend grid component model
+      gridComponent: {},
+      // options to extend cell component model
+      cellComponent: {},
       // add palette command
       commandId: 'add-palette',
       // add palette modal label
