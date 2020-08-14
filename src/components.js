@@ -20,47 +20,77 @@ export default (editor, opts = {}) => {
     label: 'Title'
   }
 
-  const addColumnTrait = {
-    name: 'addColumn',
-    label: 'Column',
+  const addCellTrait = {
+    name: 'addCell',
+    //label: 'Add cell',
     type: 'button',
     full: true,
-    text: 'Add',
+    text: 'Add Cell',
     command: editor => {
       const comp = editor.getSelected();
-      comp && comp.set('columns', parseInt(comp.get('columns')) + 1);
+      comp && comp.components().add(`<div data-gjs-type="${gridChildId}"></div>`);
     }
   }
 
-  const addRowTrait = {
-    name: 'addRow',
-    label: 'Row',
+  const splitCellTrait = {
+    name: 'splitCell',
+    //label: 'Add cell',
     type: 'button',
     full: true,
-    text: 'Add',
+    text: 'Split Cell',
     command: editor => {
       const comp = editor.getSelected();
-      comp && comp.set('rows', parseInt(comp.get('rows')) + 1);
+      comp && comp.components().add([{
+        tagName: 'div',
+        name: 'cell-item',
+        resizable: {
+          tl: 0,
+          tc: 0,
+          tr: 0,
+          cl: 0,
+          cr: 1,
+          bl: 0,
+          br: 0,
+          bc: 0,
+          keyWidth: 'flex-basis',
+          minDim: 1
+        },
+        style: {
+          'min-height': '75px',
+          'flex-grow': 1,
+          'flex-basis': '100%'
+        }
+      }]);
     }
   }
 
-  const columnsTrait = {
-    name: 'columns',
-    label: 'Columns',
+  const copyCellTrait = {
+    name: 'copyCell',
+    //label: 'Add cell',
+    type: 'button',
+    full: true,
+    text: 'Copy Cell',
+    command: editor => {
+      const comp = editor.getSelected();
+      comp && comp.parent().components().add(comp.clone());
+    }
+  }
+
+  const cellWidthTrait = {
+    name: 'cellWidth',
+    label: 'Cell Min',
     type: 'number',
     changeProp: 1,
     placeholder: '1',
-    default: 3,
     min: 1,
   }
 
-  const rowsTrait = {
-    name: 'rows',
-    label: 'Rows',
+  const cellHeightTrait = {
+    name: 'cellHeight',
+    label: 'Cell Height',
     type: 'number',
     changeProp: 1,
     placeholder: '1',
-    default: 3,
     min: 1,
   }
 
@@ -68,6 +98,43 @@ export default (editor, opts = {}) => {
     model: {
       defaults: {
         // ...
+        traits: [
+          idTrait,
+          titleTrait,
+          splitCellTrait,
+        ],
+        style: {
+          display: 'flex',
+          'justify-content': 'flex-start',
+          'align-items': 'stretch',
+          padding: '5px'
+        },
+        components: [{
+          tagName: 'div',
+          name: 'cell-item',
+          traits: [
+            idTrait,
+            titleTrait,
+            copyCellTrait,
+          ],
+          resizable: {
+            tl: 0,
+            tc: 0,
+            tr: 0,
+            cl: 0,
+            cr: 1,
+            bl: 0,
+            br: 0,
+            bc: 0,
+            keyWidth: 'flex-basis',
+            minDim: 1
+          },
+          style: {
+            'min-height': '75px',
+            'flex-grow': 1,
+            'flex-basis': '100%'
+          }
+        }]
       },
       ...cellComponent
     }
@@ -80,17 +147,16 @@ export default (editor, opts = {}) => {
         traits: [
           idTrait,
           titleTrait,
-          columnsTrait,
-          addColumnTrait,
-          rowsTrait,
-          addRowTrait,
+          cellWidthTrait,
+          //cellHeightTrait,
+          addCellTrait,
         ],
         style: {
           display: 'grid',
-          padding: '8px',
+          padding: '10px',
           height: '400px',
-          'grid-template-rows': '1fr 1fr 1fr',
-          'grid-template-columns': '1fr 1fr 1fr'
+          //'grid-template-rows': 'repeat(auto-fill, minmax(1fr, 150px))',
+          'grid-template-columns': 'repeat(auto-fill, minmax(300px, 1fr))'
         },
         resizable: {
           tl: 0,
@@ -102,52 +168,35 @@ export default (editor, opts = {}) => {
           br: 0,
           minDim: 5
         },
-        components: `<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>`,
-        rows: 3,
-        columns: 3,
+        components: `<div data-gjs-type="${gridChildId}"></div>
+        <div data-gjs-type="${gridChildId}"></div>
+        <div data-gjs-type="${gridChildId}"></div>
+        <div data-gjs-type="${gridChildId}"></div>
+        <div data-gjs-type="${gridChildId}"></div>
+        <div data-gjs-type="${gridChildId}"></div>
+        <div data-gjs-type="${gridChildId}"></div>
+        <div data-gjs-type="${gridChildId}"></div>
+        <div data-gjs-type="${gridChildId}"></div>`,
+        cellWidth: 300,
+        //cellHeight: 150
       },
       init() {
-        this.on("change:rows", this.updateRows);
-        this.on("change:columns", this.updateColumns);
+        this.on("change:cellWidth", this.updateCells);
+        //this.on("change:cellHeight", this.updateHeight);
       },
-      updateRows() {
-        const rows = parseInt(this.get('rows'));
-        const cols = parseInt(this.get('columns'));
-        let templateRows = '';
-        let comps = '';
-        for (let i = 0; i < rows; i++) templateRows += '1fr ';
-        const len = (rows * cols) - this.components().length;
-        if (len > 0)
-          for (let i = 0; i < len; i++) comps += '<div></div>';
-        else
-          for (let i = 0; i > len; i--) this.components().pop();
+      updateCells() {
+        const cell = this.get('cellWidth');
         this.set('style', {
-          'grid-template-rows': templateRows
+          'grid-template-columns': `repeat(auto-fill, minmax(${cell}px, 1fr))`
         });
-        comps.length && this.components().add(comps);
       },
-      updateColumns() {
-        const rows = parseInt(this.get('rows'));
-        const cols = parseInt(this.get('columns'));
-        let templateCols = '';
-        let comps = '';
-        for (let i = 0; i < cols; i++) templateCols += '1fr ';
-        const len = (rows * cols) - this.components().length;
-        if (len > 0)
-          for (let i = 0; i < len; i++) comps += '<div></div>';
-        else
-          for (let i = 0; i > len; i--) this.components().pop();
+      updateHeight() {
+        const cell = this.get('cellHeight');
         this.set('style', {
-          'grid-template-columns': templateCols
+          'grid-template-rows': `repeat(auto-fill, minmax(1fr, ${cell}px))`
         });
-        comps.length && this.components().add(comps);
       },
       ...gridComponent
-    },
-    //view: {
-    //  init() {
-    //    this.listenTo(this.model, 'change:rows change:columns', this.render)
-    //  }
-    //}
+    }
   });
 };
