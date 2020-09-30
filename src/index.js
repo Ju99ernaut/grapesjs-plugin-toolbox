@@ -1,16 +1,16 @@
 import loadComponents from './components';
 import loadBlocks from './blocks';
 import loadPanels from './panels';
-import breadcrumbs from './utils/breadcrumbs';
-import palette from './utils/palette';
-import en from './locale/en';
+import {
+  breadcrumbs,
+  palette
+} from './utils';
 
 export default (editor, opts = {}) => {
   const options = {
     ...{
-      i18n: {},
       // label for grid block
-      labelGrid: 'CSS Grid',
+      labelGrid: 'Grid',
       // category for grid block
       categoryGrid: 'Basic',
       // options to extend grid block
@@ -62,11 +62,6 @@ export default (editor, opts = {}) => {
   breadcrumbs(editor, options);
   // Add palette
   palette(editor, options);
-  // Load i18n files
-  editor.I18n && editor.I18n.addMessages({
-    en,
-    ...options.i18n,
-  });
 
   editor.on('load', () => {
     const $ = grapesjs.$;
