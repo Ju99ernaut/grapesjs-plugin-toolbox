@@ -11,24 +11,25 @@ export default (editor, opts = {}) => {
     const {
         $
     } = editor;
+    const pfx = editor.Config.stylePrefix;
 
     return {
         state,
         getters,
         mutations,
         gridEl() {
-            const el = $(`<div id="main">
+            const el = $(`<div id="${pfx}grid-main">
                 <section
                 style="grid-template-columns:${this.getters.colTemplate(this.state)};grid-template-rows:50px;
                 grid-column-gap:${this.state.columngap + 'px'};grid-row-gap:${this.state.rowgap + 'px'}"
-                class="colunits"
+                class="${pfx}colunits"
                 >
                     ${this.state.colArr.map((col, i) => `<div data-key="${i}">
                         <input
                         value="${col.unit}"
                         data-key="${i}"
                         data-direction="col"
-                        class="${this.state.columns > 8 ? this.widthfull : ''}"
+                        class="${this.state.columns > 8 ? this.widthfull : this.widthhalf}"
                         aria-label="Grid Template Column Measurements"
                         >
                     </div>`).join("")}
@@ -37,27 +38,28 @@ export default (editor, opts = {}) => {
                 <section
                 style="grid-template-columns:50px;grid-template-rows:${this.getters.rowTemplate(this.state)};
                     grid-column-gap:${this.state.columngap + 'px'};grid-row-gap:${this.state.rowgap + 'px' }"
-                class="rowunits"
+                class="${pfx}rowunits"
                 >
                     ${this.state.rowArr.map((row, i) => `<div data-key="${i}">
                         <input
                         value="${row.unit}"
                         data-key="${i}"
                         data-direction="row"
+                        class="${this.widthfull}"
                         aria-label="Grid Template Row Measurements"
                         >
                     </div>`).join("")}
                 </section>
         
-                <div id="gridcontainer">
+                <div id="${pfx}gridcontainer">
                 </div>
                 <!--gridcontainer-->
             </div>`);
             const inputs = el.find('input');
             inputs.on('change', e => this.validateunit(e));
-            const gridcontainer = el.find('#gridcontainer');
+            const gridcontainer = el.find(`#${pfx}gridcontainer`);
             const gridsection = $(`<section
-                class="grid"
+                class="${pfx}grid"
                 style="grid-template-columns:${this.getters.colTemplate(this.state)};grid-template-rows:${this.getters.rowTemplate(this.state)};
                     grid-column-gap:${this.state.columngap + 'px'};grid-row-gap:${this.state.rowgap + 'px' }"
                 >
@@ -73,7 +75,7 @@ export default (editor, opts = {}) => {
             place.on('mousedown', e => this.placeChild(e, 's'));
             place.on('mouseup', e => this.placeChild(e, 'e'));
             const gridchild = $(`<section
-                class="grid gridchild"
+                class="${pfx}grid ${pfx}gridchild"
                 style="grid-template-columns:${this.getters.colTemplate(this.state)};grid-template-rows:${this.getters.rowTemplate(this.state)}; 
                     grid-column-gap:${this.state.columngap + 'px'};grid-row-gap:${this.state.rowgap + 'px' }"
                 >
@@ -103,10 +105,11 @@ export default (editor, opts = {}) => {
         },
         update() {
             this.el = this.gridEl();
-            $('#main').replaceWith(this.el);
+            $(`#${pfx}grid-main`).replaceWith(this.el);
         },
         child: {},
-        widthfull: "widthfull",
+        widthfull: `${pfx}widthfull`,
+        widthhalf: `${pfx}widthhalf`,
         errors: {
             col: [],
             row: []
