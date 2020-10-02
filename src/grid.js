@@ -54,9 +54,7 @@ export default (editor, opts = {}) => {
                 <!--gridcontainer-->
             </div>`);
             const inputs = el.find('input');
-            inputs.on('change', e => {
-                this.validateunit(e)
-            });
+            inputs.on('change', e => this.validateunit(e));
             const gridcontainer = el.find('#gridcontainer');
             const gridsection = $(`<section
                 class="grid"
@@ -95,25 +93,17 @@ export default (editor, opts = {}) => {
         render(cont) {
             if (!this.el) {
                 this.mutations.initialArrIndex(this.state, '')
-                if (typeof cont === 'string') {
-                    this.el = this.gridEl();
-                    this.container = $(cont)
-                    this.container.append(this.el);
-                } else {
-                    this.el = this.gridEl();
-                    this.container = container;
-                    cont.appendChild(this.el);
-                }
+                this.el = this.gridEl();
+                this.container = $(cont);
+                this.container.append(this.el);
             }
         },
         getEl() {
             return this.el.get(0);
         },
         update() {
-            //Refresh the grid
             this.el = this.gridEl();
-            this.container.html ? this.container.html('') : (this.container.innerHTML = '');
-            this.container.append ? this.container.append(this.el) : this.container.appendChild(this.el);
+            $('#main').replaceWith(this.el);
         },
         child: {},
         widthfull: "widthfull",
