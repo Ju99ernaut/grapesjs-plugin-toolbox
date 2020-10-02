@@ -6,6 +6,7 @@ export default (editor, config) => {
     const cm = editor.Commands;
     const pn = editor.Panels;
     const um = editor.UndoManager;
+    const pfx = editor.Config.stylePrefix;
 
     cm.add(cmdSave, e => {
         editor.store(res => {
@@ -42,8 +43,8 @@ export default (editor, config) => {
     const saveBtn = pn.getButton('options', cmdSave);
 
     editor.on('component:update', () => {
-        um.hasUndo() ? undoBtn.set('className', 'font-aqua fa fa-undo') : undoBtn.set('className', 'fa fa-undo');
-        um.hasRedo() ? redoBtn.set('className', 'font-aqua fa fa-repeat') : redoBtn.set('className', 'fa fa-repeat');
-        editor.getDirtyCount() > 0 ? saveBtn.set('className', 'font-green fa fa-floppy-o') : saveBtn.set('className', 'fa fa-floppy-o');
+        um.hasUndo() ? undoBtn.set('className', `${pfx}font-aqua fa fa-undo`) : undoBtn.set('className', 'fa fa-undo');
+        um.hasRedo() ? redoBtn.set('className', `${pfx}font-aqua fa fa-repeat`) : redoBtn.set('className', 'fa fa-repeat');
+        editor.getDirtyCount() > 0 ? saveBtn.set('className', `${pfx}font-green fa fa-floppy-o`) : saveBtn.set('className', 'fa fa-floppy-o');
     });
 }
