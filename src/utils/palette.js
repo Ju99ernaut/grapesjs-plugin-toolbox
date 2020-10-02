@@ -9,6 +9,8 @@ export default (editor, opts = {}) => {
         paletteIcon,
         onAdd
     } = opts;
+    const $ = editor.$;
+    const pfx = editor.Config.stylePrefix;
 
     // Update image component toolbar
     const domc = editor.DomComponents;
@@ -62,32 +64,29 @@ export default (editor, opts = {}) => {
         },
 
         createContent(color, palette) {
-            const content = document.createElement('div');
-            let paletteSwatches = '';
-            palette.forEach(col => paletteSwatches += `<div class="swatch" style="background-color: ${col}"></div>`);
+            const content = $('<div style="position:relative;"></div>');
             const colorOutput = `
-            <div class="color-thief-output" style="display: block;">
-                <div class="output-layout">
-                    <div class="function get-color">
-                        <h3 class="function-title">Dominant Color</h3>
+            <div class="${pfx}color-thief-output" style="display: block;">
+                <div class="${pfx}output-layout">
+                    <div class="${pfx}function ${pfx}get-color">
+                        <h3 class="${pfx}function-title">Dominant</h3>
                         <div class="swatches">
                             <div class="swatch" style="background-color: ${color}"></div>
                         </div>
                     </div>
-                    <div class="function get-palette">
-                        <h3 class="function-title">Palette</h3>
-                        <div class="function-output">
+                    <div class="${pfx}function ${pfx}get-palette">
+                        <h3 class="${pfx}function-title">Palette</h3>
+                        <div class="${pfx}function-output">
                             <div class="swatches">
-                                ${paletteSwatches}
+                                ${palette.map(col => `<div class="swatch" style="background-color: ${col}"></div>`).join('')}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>`
-            content.style = 'position: relative';
-            content.innerHTML = `
+            content.html(`
                 <div>${colorOutput}</div>
-                <button class="tui-image-editor__apply-btn" style="
+                <button class="${pfx}palette__apply-btn" style="
                 position: absolute;
                 top: 0; right: 0;
                 margin: 10px;
@@ -100,9 +99,9 @@ export default (editor, opts = {}) => {
                 ">
                 ${labelApply}
                 </botton>
-            `;
+            `);
 
-            return content;
+            return content.get(0);
         },
 
         addPalette() {
