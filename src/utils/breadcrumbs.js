@@ -16,11 +16,12 @@ export default (editor, config) => {
         return generateTree(el.parentNode) + `<li><a><span>${el.tagName.toLowerCase()+(el.id ? "#" + el.id : "")}</span></a></li>`;
     };
 
-    const $ = grapesjs.$;
+    const $ = editor.$;
+    const pfx = editor.Config.stylePrefix;
 
     editor.on('component:selected', model => {
-        !$('#breadcrumbs').length && $('body').append($('<div id="breadcrumbs"></div>'));
-        const breadcrumbs = $('#breadcrumbs');
-        breadcrumbs.get(0).innerHTML = generateQuerySelector(model.getEl());
+        const breadcrumbs = $(`#${pfx}breadcrumbs`);
+        !breadcrumbs.length && $('body').append($(`<div id="${pfx}breadcrumbs"></div>`));
+        breadcrumbs.html(generateQuerySelector(model.getEl()));
     });
 }
