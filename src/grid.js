@@ -62,8 +62,6 @@ export default (editor, opts = {}) => {
                 class="grid"
                 style="grid-template-columns:${this.getters.colTemplate(this.state)};grid-template-rows:${this.getters.rowTemplate(this.state)};
                     grid-column-gap:${this.state.columngap + 'px'};grid-row-gap:${this.state.rowgap + 'px' }"
-                ontouchstart.prevent="${this.delegatedTouchPlaceChild}"
-                ontouchend.prevent="${this.delegatedTouchPlaceChild}"
                 >
                 ${Array(this.getters.divNum(this.state)).fill().map((item, i) => `<div
                     data-key="${i}"
@@ -71,6 +69,8 @@ export default (editor, opts = {}) => {
                     >
                 </div>`).join("")}
             </section>`);
+            gridsection.on('ontouchstart.prevent', e => this.delegatedTouchPlaceChild(e));
+            gridsection.on('ontouchend.prevent', e => this.delegatedTouchPlaceChild(e));
             const place = gridsection.find('div');
             place.on('mousedown', e => this.placeChild(e, 's'));
             place.on('mouseup', e => this.placeChild(e, 'e'));
@@ -80,11 +80,10 @@ export default (editor, opts = {}) => {
                     grid-column-gap:${this.state.columngap + 'px'};grid-row-gap:${this.state.rowgap + 'px' }"
                 >
                 ${this.state.childarea.map((child, i) => `<div
-                    data-key="${child}"
                     class="child${i}"
                     style="grid-area: ${child}"
                     >
-                    <button>&times;</button>
+                    <button data-key="${i}">&times;</button>
                 </div>`).join("")}
             </section>`);
             const del = gridchild.find('button');
@@ -98,9 +97,11 @@ export default (editor, opts = {}) => {
                 this.mutations.initialArrIndex(this.state, '')
                 if (typeof cont === 'string') {
                     this.el = this.gridEl();
-                    $(cont).append(this.el);
+                    this.container = $(cont)
+                    this.container.append(this.el);
                 } else {
                     this.el = this.gridEl();
+                    this.container = container;
                     cont.appendChild(this.el);
                 }
             }
@@ -110,6 +111,9 @@ export default (editor, opts = {}) => {
         },
         update() {
             //Refresh the grid
+            this.el = this.gridEl();
+            this.container.html ? this.container.html('') : (this.container.innerHTML = '');
+            this.container.append ? this.container.append(this.el) : this.container.appendChild(this.el);
         },
         child: {},
         widthfull: "widthfull",
@@ -144,6 +148,9 @@ export default (editor, opts = {}) => {
                 this.errors[direction].push(i);
             } else {
                 this.errors[direction].splice(this.errors[direction].indexOf(i), 1);
+                if (direction === 'col') this.state.colArr[i].unit = unit;
+                else this.state.rowArr[i].unit = unit;
+                this.update();
             }
         },
         delegatedTouchPlaceChild(ev) {
@@ -155,7 +162,7 @@ export default (editor, opts = {}) => {
             this.placeChild(target.dataset.id, startend);
         },
         placeChild(ev, startend) {
-            const item = parseInt(ev.target.getAttribute('data-key'));
+            const item = parseInt(ev.target.getAttribute('data-key')) + 1;
             //built an object first because I might use this for something else
             this.child[`${startend}row`] = Math.ceil(item / this.state.columns);
             this.child[`${startend}col`] =
@@ -171,10 +178,12 @@ export default (editor, opts = {}) => {
                 1} / ${endCol + 1}`;
                 this.mutations.addChildren(this.state, childstring);
             }
+            this.update();
         },
         removeChild(ev) {
             const index = ev.target.getAttribute('data-key');
             this.mutations.removeChildren(this.state, index);
+            this.update();
         }
     }
 };
