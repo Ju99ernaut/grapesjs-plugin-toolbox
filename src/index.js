@@ -1,6 +1,7 @@
 import loadComponents from './components';
 import loadBlocks from './blocks';
 import loadPanels from './panels';
+import grid from './grid';
 import {
   breadcrumbs,
   palette
@@ -62,10 +63,13 @@ export default (editor, opts = {}) => {
   breadcrumbs(editor, options);
   // Add palette
   palette(editor, options);
+  // Load grid
+  editor.Grid = grid(editor, options);
 
   editor.on('load', () => {
-    const $ = grapesjs.$;
+    const $ = editor.$;
     const pn = editor.Panels;
+    const pfx = editor.Config.stylePrefix;
 
     //? Map layer icons to components
     editor.Components.componentTypes.forEach(type => {
@@ -241,13 +245,13 @@ export default (editor, opts = {}) => {
     openSm && openSm.set('active', 1);
 
     // Add Settings Sector
-    let traitsSector = $(`<div class="gjs-sm-sector no-select">
-      <div class="gjs-sm-title"><span class="icon-settings fa fa-cog"></span> Settings</div>
-      <div class="gjs-sm-properties" style="display: none;"></div></div>`);
-    const traitsProps = traitsSector.find('.gjs-sm-properties');
-    traitsProps.append($('.gjs-trt-traits'));
-    $('.gjs-sm-sectors').before(traitsSector);
-    traitsSector.find('.gjs-sm-title').on('click', function () {
+    let traitsSector = $(`<div class="${pfx}sm-sector no-select">
+      <div class="${pfx}sm-title"><span class="icon-settings fa fa-cog"></span> Settings</div>
+      <div class="${pfx}sm-properties" style="display: none;"></div></div>`);
+    const traitsProps = traitsSector.find(`.${pfx}sm-properties`);
+    traitsProps.append($(`.${pfx}trt-traits`));
+    $(`.${pfx}sm-sectors`).before(traitsSector);
+    traitsSector.find(`.${pfx}sm-title`).on('click', function () {
       let traitStyle = traitsProps.get(0).style;
       let hidden = traitStyle.display == 'none';
       if (hidden) {
@@ -260,7 +264,7 @@ export default (editor, opts = {}) => {
     // Body icon
     const openLm = pn.getButton('views', 'open-layers');
     openLm && openLm.set('active', 1);
-    $('.gjs-layer-name')[0].innerHTML = '<i class="fa fa-cubes"></i> Body';
+    $(`.${pfx}layer-name`)[0].innerHTML = '<i class="fa fa-cubes"></i> Body';
 
     // Open block manager
     const openBlocksBtn = pn.getButton('views', 'open-blocks');
