@@ -1,46 +1,39 @@
-import {
-    store
-} from './utils';
-
 export default (editor, opts = {}) => {
-    const {
-        state,
-        getters,
-        mutations
-    } = store(opts);
     const {
         $
     } = editor;
     const pfx = editor.Config.stylePrefix;
 
     return {
-        state,
-        getters,
-        mutations,
-        gridEl() {
-            const el = $(`<div id="${pfx}grid-main">
+        gridEl(store) {
+            const {
+                width,
+                height,
+                top
+            } = this.dimensions();
+            const el = $(`<div id="${pfx}grid-main" style="display:${this.visible ? 'block': 'none'};width:${width-6}px;height:${height-6}px">
                 <section
-                style="grid-template-columns:${this.getters.colTemplate(this.state)};grid-template-rows:50px;
-                grid-column-gap:${this.state.columngap + 'px'};grid-row-gap:${this.state.rowgap + 'px'}"
+                style="width:${width-6}px;top:${top < 40 ? height : -40}px;grid-template-columns:${store.getters.colTemplate(store.state)};grid-template-rows:50px;
+                grid-column-gap:${store.state.columngap + 'px'};grid-row-gap:${store.state.rowgap + 'px'}"
                 class="${pfx}colunits"
                 >
-                    ${this.state.colArr.map((col, i) => `<div data-key="${i}">
+                    ${store.state.colArr.map((col, i) => `<div data-key="${i}">
                         <input
                         value="${col.unit}"
                         data-key="${i}"
                         data-direction="col"
-                        class="${this.state.columns > 8 ? this.widthfull : this.widthhalf}"
+                        class="${store.state.columns > 8 ? this.widthfull : this.widthhalf}"
                         aria-label="Grid Template Column Measurements"
                         >
                     </div>`).join("")}
                 </section>
         
                 <section
-                style="grid-template-columns:50px;grid-template-rows:${this.getters.rowTemplate(this.state)};
-                    grid-column-gap:${this.state.columngap + 'px'};grid-row-gap:${this.state.rowgap + 'px' }"
+                style="grid-template-columns:50px;grid-template-rows:${store.getters.rowTemplate(store.state)};
+                    grid-column-gap:${store.state.columngap + 'px'};grid-row-gap:${store.state.rowgap + 'px' }"
                 class="${pfx}rowunits"
                 >
-                    ${this.state.rowArr.map((row, i) => `<div data-key="${i}">
+                    ${store.state.rowArr.map((row, i) => `<div data-key="${i}">
                         <input
                         value="${row.unit}"
                         data-key="${i}"
@@ -60,10 +53,10 @@ export default (editor, opts = {}) => {
             const gridcontainer = el.find(`#${pfx}gridcontainer`);
             const gridsection = $(`<section
                 class="${pfx}grid"
-                style="grid-template-columns:${this.getters.colTemplate(this.state)};grid-template-rows:${this.getters.rowTemplate(this.state)};
-                    grid-column-gap:${this.state.columngap + 'px'};grid-row-gap:${this.state.rowgap + 'px' }"
+                style="grid-template-columns:${store.getters.colTemplate(store.state)};grid-template-rows:${store.getters.rowTemplate(store.state)};
+                    grid-column-gap:${store.state.columngap + 'px'};grid-row-gap:${store.state.rowgap + 'px' }"
                 >
-                ${Array(this.getters.divNum(this.state)).fill().map((item, i) => `<div
+                ${Array(store.getters.divNum(store.state)).fill().map((item, i) => `<div
                     data-key="${i}"
                     class="box${i}"
                     >
@@ -76,10 +69,10 @@ export default (editor, opts = {}) => {
             place.on('mouseup', e => this.placeChild(e, 'e'));
             const gridchild = $(`<section
                 class="${pfx}grid ${pfx}gridchild"
-                style="grid-template-columns:${this.getters.colTemplate(this.state)};grid-template-rows:${this.getters.rowTemplate(this.state)}; 
-                    grid-column-gap:${this.state.columngap + 'px'};grid-row-gap:${this.state.rowgap + 'px' }"
+                style="grid-template-columns:${store.getters.colTemplate(store.state)};grid-template-rows:${store.getters.rowTemplate(store.state)}; 
+                    grid-column-gap:${store.state.columngap + 'px'};grid-row-gap:${store.state.rowgap + 'px' }"
                 >
-                ${this.state.childarea.map((child, i) => `<div
+                ${store.state.childarea.map((child, i) => `<div
                     class="child${i}"
                     style="grid-area: ${child}"
                     >
@@ -92,10 +85,9 @@ export default (editor, opts = {}) => {
             gridcontainer.append(gridchild);
             return el;
         },
-        render(cont) {
+        render(cont, store) {
             if (!this.el) {
-                this.mutations.initialArrIndex(this.state, '')
-                this.el = this.gridEl();
+                this.el = this.gridEl(store);
                 this.container = $(cont);
                 this.container.append(this.el);
             }
@@ -103,8 +95,11 @@ export default (editor, opts = {}) => {
         getEl() {
             return this.el.get(0);
         },
-        update() {
-            this.el = this.gridEl();
+        select(selected) {
+            this.selected = selected;
+        },
+        update(store) {
+            this.el = this.gridEl(store);
             $(`#${pfx}grid-main`).replaceWith(this.el);
         },
         child: {},
@@ -113,6 +108,13 @@ export default (editor, opts = {}) => {
         errors: {
             col: [],
             row: []
+        },
+        visible: false,
+        dimensions() {
+            return (this.selected && editor.Canvas.getElementPos(this.selected.getEl())) || {
+                width: 100,
+                height: 100
+            }
         },
         validateunit(e) {
             const unit = e.target.value;
@@ -140,10 +142,11 @@ export default (editor, opts = {}) => {
             if (!check) {
                 this.errors[direction].push(i);
             } else {
+                const store = this.selected.get('store');
                 this.errors[direction].splice(this.errors[direction].indexOf(i), 1);
-                if (direction === 'col') this.state.colArr[i].unit = unit;
-                else this.state.rowArr[i].unit = unit;
-                this.update();
+                if (direction === 'col') store.state.colArr[i].unit = unit;
+                else store.state.rowArr[i].unit = unit;
+                this.update(store);
             }
         },
         delegatedTouchPlaceChild(ev) {
@@ -155,11 +158,12 @@ export default (editor, opts = {}) => {
             this.placeChild(target.dataset.id, startend);
         },
         placeChild(ev, startend) {
+            const store = this.selected.get('store');
             const item = parseInt(ev.target.getAttribute('data-key')) + 1;
             //built an object first because I might use this for something else
-            this.child[`${startend}row`] = Math.ceil(item / this.state.columns);
+            this.child[`${startend}row`] = Math.ceil(item / store.state.columns);
             this.child[`${startend}col`] =
-                item - (this.child[`${startend}row`] - 1) * this.state.columns;
+                item - (this.child[`${startend}row`] - 1) * store.state.columns;
             //create the children css units as a string
             if (startend === "e") {
                 // flip starts and ends if dragged in the opposite direction
@@ -169,14 +173,15 @@ export default (editor, opts = {}) => {
                 this.child.scol <= this.child.ecol ? [this.child.scol, this.child.ecol] : [this.child.ecol, this.child.scol];
                 let childstring = `${startRow} / ${startCol} / ${endRow +
                 1} / ${endCol + 1}`;
-                this.mutations.addChildren(this.state, childstring);
+                store.mutations.addChildren(store.state, childstring);
             }
-            this.update();
+            this.update(store);
         },
         removeChild(ev) {
+            const store = this.selected.get('store');
             const index = ev.target.getAttribute('data-key');
-            this.mutations.removeChildren(this.state, index);
-            this.update();
+            store.mutations.removeChildren(store.state, index);
+            this.update(store);
         }
     }
 };
