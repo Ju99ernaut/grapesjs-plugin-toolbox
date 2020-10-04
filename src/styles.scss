@@ -337,7 +337,7 @@ $breadcrumbsHoverColor: #6c8fdb;
     // fruit loops!
     @for $i from 1 through $max {
         div[class*="child"]:nth-child(#{$i}) {
-            background: hsla(($i - 15) * ($color * 1.5), 80%, 30%, 0.7);
+            background: hsla(($i - 15) * ($color * 1.5), 80%, 30%, 0.5);
             /*background: hsla($color-frequency + ($i * 3), 80%, 30%, 0.7);*/
             border: 1px solid #ddd;
         }
@@ -379,7 +379,7 @@ $breadcrumbsHoverColor: #6c8fdb;
 }
 
 ##{$prefix}gridcontainer {
-    border: 2px solid #6d1a39;
+    border: 2px solid #71db9a;
     width: 100%;
     height: 100%;
     z-index: 0;
@@ -437,13 +437,6 @@ $breadcrumbsHoverColor: #6c8fdb;
 
 .#{$prefix}widthhalf {
     width: 50%;
-}
-
-@media screen and (max-width: 700px) {
-    main {
-        width: calc(80vw - 50px);
-        height: calc(40vh - 50px);
-    }
 }
 
 .#{$prefix}errors {
