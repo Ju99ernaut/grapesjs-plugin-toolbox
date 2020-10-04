@@ -1,6 +1,8 @@
 # Grapesjs Plugin Toolbox
 
-Nice to have features
+Tools for `grapesjs`
+
+>WIP
 
 ### HTML
 ```html
