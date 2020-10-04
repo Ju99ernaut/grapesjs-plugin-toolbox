@@ -12,7 +12,24 @@ export default (editor, opts = {}) => {
                 top
             } = this.dimensions();
             const el = $(`<div id="${pfx}grid-main" style="display:${this.visible ? 'block': 'none'};width:${width-6}px;height:${height-6}px">
-                <section
+                ${this.gridUnits(store, width, height, top)}
+                <div id="${pfx}gridcontainer">
+                </div>
+                <!--gridcontainer-->
+            </div>`);
+            const inputs = el.find('input');
+            inputs.on('change', e => this.validateunit(e));
+            const gridcontainer = el.find(`#${pfx}gridcontainer`);
+            const {
+                gridsection,
+                gridchild
+            } = this.gridContainer(store);
+            gridcontainer.append(gridsection);
+            gridcontainer.append(gridchild);
+            return el;
+        },
+        gridUnits(store, width, height, top) {
+            return `<section
                 style="width:${width-6}px;top:${top < 40 ? height : -40}px;grid-template-columns:${store.getters.colTemplate(store.state)};grid-template-rows:50px;
                 grid-column-gap:${store.state.columngap + 'px'};grid-row-gap:${store.state.rowgap + 'px'}"
                 class="${pfx}colunits"
@@ -42,15 +59,9 @@ export default (editor, opts = {}) => {
                         aria-label="Grid Template Row Measurements"
                         >
                     </div>`).join("")}
-                </section>
-        
-                <div id="${pfx}gridcontainer">
-                </div>
-                <!--gridcontainer-->
-            </div>`);
-            const inputs = el.find('input');
-            inputs.on('change', e => this.validateunit(e));
-            const gridcontainer = el.find(`#${pfx}gridcontainer`);
+                </section>`
+        },
+        gridContainer(store) {
             const gridsection = $(`<section
                 class="${pfx}grid"
                 style="grid-template-columns:${store.getters.colTemplate(store.state)};grid-template-rows:${store.getters.rowTemplate(store.state)};
@@ -62,8 +73,14 @@ export default (editor, opts = {}) => {
                     >
                 </div>`).join("")}
             </section>`);
-            gridsection.on('ontouchstart.prevent', e => this.delegatedTouchPlaceChild(e));
-            gridsection.on('ontouchend.prevent', e => this.delegatedTouchPlaceChild(e));
+            gridsection.on('ontouchstart', e => {
+                e.preventDefault();
+                this.delegatedTouchPlaceChild(e);
+            });
+            gridsection.on('ontouchend', e => {
+                e.preventDefault();
+                this.delegatedTouchPlaceChild(e);
+            });
             const place = gridsection.find('div');
             place.on('mousedown', e => this.placeChild(e, 's'));
             place.on('mouseup', e => this.placeChild(e, 'e'));
@@ -81,9 +98,10 @@ export default (editor, opts = {}) => {
             </section>`);
             const del = gridchild.find('button');
             del.on('click', e => this.removeChild(e));
-            gridcontainer.append(gridsection);
-            gridcontainer.append(gridchild);
-            return el;
+            return {
+                gridsection,
+                gridchild
+            };
         },
         render(cont, store) {
             if (!this.el) {
