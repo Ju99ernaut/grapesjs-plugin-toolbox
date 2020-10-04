@@ -151,16 +151,9 @@ export default (editor, opts = {}) => {
   }
 
   const generateMedia = (css) => {
-    const canvasWidth = editor.Canvas.getWrapperEl().offsetWidth;
-    const devices = editor.Devices.getAll().map(d => {
-      return {
-        width: d.get('width'),
-        maxWidth: d.get('widthMedia')
-      }
-    });
-    const idx = devices.map(d => d.width).indexOf(canvasWidth + 10 + 'px');
-    if (idx >= 0) {
-      return `@media (max-width: ${devices[idx].maxWidth}){
+    const device = editor.Devices.get(editor.getDevice());
+    if (device !== '' || device !== 'Desktop') {
+      return `@media (max-width: ${device.get('widthMedia')}){
         ${css}
       }`
     } else {
