@@ -16,14 +16,12 @@ export const groupRepeatedUnits = (templateUnitArray = [{
     return groups;
 };
 
-export const createRepetition = (groups, maxRepetition = 1) => {
-    return groups
+export const createRepetition = (groups, min, auto, maxRepetition = 1) => {
+    return auto ? `repeat(auto-fill, minmax(${min}px, 1fr))` : groups
         .map(group =>
             // If you want to add repetition only when a measure is repeated more than x times,
             // change maxRepetition value to x
-            group.length === maxRepetition ?
-            group.join(" ") :
-            `repeat(${group.length}, ${group[0]})`
+            group.length === maxRepetition ? group.join(" ") : `repeat(${group.length}, ${group[0]})`
         )
         .join(" ");
 };
