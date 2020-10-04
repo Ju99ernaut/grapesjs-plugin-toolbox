@@ -263,7 +263,6 @@ export default (editor, opts = {}) => {
         this.on("change:rowgap", this.updateRowgap);
         this.on("change:columngap", this.updateColumngap);
         this.on("change:min", this.updateMin);
-        this.on("change:attributes.style.height", () => editor.Grid.update(this.get('store')));
         this.on("change:status", this.onStatusChange);
       },
       updateRows() {

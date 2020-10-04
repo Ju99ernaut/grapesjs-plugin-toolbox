@@ -1,3 +1,7 @@
+import {
+    gridCompId
+} from "./consts";
+
 export default (editor, opts = {}) => {
     const {
         $
@@ -108,6 +112,9 @@ export default (editor, opts = {}) => {
                 this.el = this.gridEl(store);
                 this.container = $(cont);
                 this.container.append(this.el);
+                editor.on('styleManager:change:height run:resize', () => {
+                    editor.getSelected().get('type') === gridCompId && editor.Grid.update(store);
+                });
             }
         },
         getEl() {
