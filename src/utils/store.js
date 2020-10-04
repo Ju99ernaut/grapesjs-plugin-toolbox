@@ -6,6 +6,8 @@ import {
 export default (editor, opts = {}) => {
     return {
         state: {
+            auto: false,
+            min: 200,
             columns: 5,
             rows: 5,
             columngap: 0,
@@ -17,11 +19,11 @@ export default (editor, opts = {}) => {
         getters: {
             colTemplate(state) {
                 const unitGroups = groupRepeatedUnits(state.colArr);
-                return createRepetition(unitGroups);
+                return createRepetition(unitGroups, state.min, state.auto);
             },
             rowTemplate(state) {
                 const unitGroups = groupRepeatedUnits(state.rowArr);
-                return createRepetition(unitGroups);
+                return createRepetition(unitGroups, state.min, false);
             },
             divNum(state) {
                 return Math.max(state.columns, 0) * Math.max(state.rows, 0);
@@ -71,6 +73,12 @@ export default (editor, opts = {}) => {
             },
             removeChildren(state, payload) {
                 state.childarea.splice(payload, 1);
+            },
+            updateAuto(state, payload) {
+                state.auto = payload;
+            },
+            updateMin(state, payload) {
+                state.min = payload;
             },
             updateColumns(state, payload) {
                 state.columns = payload;
