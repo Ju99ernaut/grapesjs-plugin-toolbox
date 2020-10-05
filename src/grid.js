@@ -12,24 +12,19 @@ export default (editor, opts = {}) => {
                 top
             } = this.dimensions();
             const el = $(`<div id="${pfx}grid-main" style="display:${this.visible ? 'block': 'none'};width:${width-6}px;height:${height-6}px">
-                ${this.gridUnits(store, width, height, top)}
                 <div id="${pfx}gridcontainer">
                 </div>
                 <!--gridcontainer-->
             </div>`);
-            const inputs = el.find('input');
-            inputs.on('change', e => this.validateunit(e));
             const gridcontainer = el.find(`#${pfx}gridcontainer`);
-            const {
-                gridsection,
-                gridchild
-            } = this.gridContainer(store);
-            gridcontainer.append(gridsection);
-            gridcontainer.append(gridchild);
+            el.prepend(this.gridColUnits(store, width, height, top));
+            el.prepend(this.gridRowUnits(store));
+            gridcontainer.append(this.gridCanvas(store));
+            gridcontainer.append(this.gridCanvasChildren(store));
             return el;
         },
-        gridUnits(store, width, height, top) {
-            return `<section
+        gridColUnits(store, width, height, top) {
+            const colunits = $(`<section
                 style="width:${width-6}px;top:${top < 40 ? height : -40}px;grid-template-columns:${store.getters.colTemplate(store.state)};grid-template-rows:50px;
                 grid-column-gap:${store.state.columngap + 'px'};grid-row-gap:${store.state.rowgap + 'px'}"
                 class="${pfx}colunits"
@@ -43,9 +38,15 @@ export default (editor, opts = {}) => {
                         aria-label="Grid Template Column Measurements"
                         >
                     </div>`).join("")}
-                </section>
-        
-                <section
+                </section>`);
+
+            const inputscol = colunits.find('input');
+            inputscol.on('change', e => this.validateunit(e));
+
+            return colunits
+        },
+        gridRowUnits(store) {
+            const rowunits = $(`<section
                 style="grid-template-columns:50px;grid-template-rows:${store.getters.rowTemplate(store.state)};
                     grid-column-gap:${store.state.columngap + 'px'};grid-row-gap:${store.state.rowgap + 'px' }"
                 class="${pfx}rowunits"
@@ -59,11 +60,16 @@ export default (editor, opts = {}) => {
                         aria-label="Grid Template Row Measurements"
                         >
                     </div>`).join("")}
-                </section>`
+                </section>`);
+
+            const inputsrow = rowunits.find('input');
+            inputsrow.on('change', e => this.validateunit(e));
+
+            return rowunits;
         },
-        gridContainer(store) {
+        gridCanvas(store) {
             const gridsection = $(`<section
-                class="${pfx}grid"
+                class="${pfx}grid ${pfx}gridcanvas"
                 style="grid-template-columns:${store.getters.colTemplate(store.state)};grid-template-rows:${store.getters.rowTemplate(store.state)};
                     grid-column-gap:${store.state.columngap + 'px'};grid-row-gap:${store.state.rowgap + 'px' }"
                 >
@@ -84,6 +90,10 @@ export default (editor, opts = {}) => {
             const place = gridsection.find('div');
             place.on('mousedown', e => this.placeChild(e, 's'));
             place.on('mouseup', e => this.placeChild(e, 'e'));
+
+            return gridsection;
+        },
+        gridCanvasChildren(store) {
             const gridchild = $(`<section
                 class="${pfx}grid ${pfx}gridchild"
                 style="grid-template-columns:${store.getters.colTemplate(store.state)};grid-template-rows:${store.getters.rowTemplate(store.state)}; 
@@ -98,10 +108,8 @@ export default (editor, opts = {}) => {
             </section>`);
             const del = gridchild.find('button');
             del.on('click', e => this.removeChild(e));
-            return {
-                gridsection,
-                gridchild
-            };
+
+            return gridchild;
         },
         render(cont, store) {
             if (!this.el) {
@@ -123,6 +131,23 @@ export default (editor, opts = {}) => {
         update(store) {
             this.el = this.gridEl(store);
             $(`#${pfx}grid-main`).replaceWith(this.el);
+        },
+        updateRows(store) {
+            $(`.${pfx}rowunits`).replaceWith(this.gridRowUnits(store));
+        },
+        updateCols(store) {
+            const {
+                width,
+                height,
+                top
+            } = this.dimensions();
+            $(`.${pfx}colunits`).replaceWith(this.gridRowUnits(store, width, height, top));
+        },
+        updateCanvas(store) {
+            $(`.${pfx}gridcanvas`).replaceWith(this.gridCanvas(store));
+        },
+        updateChildren(store) {
+            $(`.${pfx}gridchild`).replaceWith(this.gridCanvasChildren(store));
         },
         child: {},
         widthfull: `${pfx}widthfull`,
@@ -166,8 +191,17 @@ export default (editor, opts = {}) => {
             } else {
                 const store = this.selected.get('store');
                 this.errors[direction].splice(this.errors[direction].indexOf(i), 1);
-                if (direction === 'col') store.state.colArr[i].unit = unit;
-                else store.state.rowArr[i].unit = unit;
+                if (direction === 'col') {
+                    store.state.colArr[i].unit = unit;
+                    this.selected.addStyle({
+                        'grid-template-columns': store.getters.colTemplate(store.state)
+                    });
+                } else {
+                    store.state.rowArr[i].unit = unit;
+                    this.selected.addStyle({
+                        'grid-template-rows': store.getters.rowTemplate(store.state)
+                    });
+                }
                 this.update(store);
             }
         },
@@ -197,13 +231,13 @@ export default (editor, opts = {}) => {
                 1} / ${endCol + 1}`;
                 store.mutations.addChildren(store.state, childstring);
             }
-            this.update(store);
+            this.updateChildren(store);
         },
         removeChild(ev) {
             const store = this.selected.get('store');
             const index = ev.target.getAttribute('data-key');
             store.mutations.removeChildren(store.state, index);
-            this.update(store);
+            this.updateChildren(store);
         }
     }
 };
