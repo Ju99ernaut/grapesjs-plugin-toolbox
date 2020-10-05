@@ -20,6 +20,10 @@ export default (editor, opts = {}) => {
       gridComponent: {},
       // options to extend cell component model
       cellComponent: {},
+      // grid cell class name
+      gridCellClass: 'grid-cell',
+      // cell item class name
+      cellItemClass: 'cell-item',
       // add palette command
       commandId: 'add-palette',
       // add palette modal label

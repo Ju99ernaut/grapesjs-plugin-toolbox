@@ -11,7 +11,9 @@ export default (editor, opts = {}) => {
   const pfx = editor.Config.stylePrefix;
   const {
     gridComponent,
-    cellComponent
+    cellComponent,
+    gridCellClass,
+    cellItemClass
   } = opts;
 
   const idTrait = {
@@ -34,6 +36,9 @@ export default (editor, opts = {}) => {
       comp && comp.components().add([{
         tagName: 'div',
         name: 'cell-item',
+        attributes: {
+          class: cellItemClass
+        },
         resizable: {
           tl: 0,
           tc: 0,
@@ -45,13 +50,14 @@ export default (editor, opts = {}) => {
           bc: 0,
           keyWidth: 'flex-basis',
           minDim: 1
-        },
-        style: {
-          'min-height': '75px',
-          'flex-grow': 1,
-          'flex-basis': '100%'
         }
       }]);
+      const cc = editor.Css;
+      cc.getRule(`.${cellItemClass}`) || cc.setRule(`.${cellItemClass}`, {
+        'min-height': '75px',
+        'flex-grow': 1,
+        'flex-basis': '100%'
+      });
     }
   }
 
@@ -115,7 +121,7 @@ export default (editor, opts = {}) => {
     command: editor => {
       const store = editor.Grid.selected.get('store');
       store.mutations.resetGrid(store.state);
-      editor.Grid.update(store);
+      editor.Grid.updateChildren(store);
     }
   }
 
@@ -131,18 +137,33 @@ export default (editor, opts = {}) => {
         state,
         getters
       } = sel.get('store');
-      const grid = state.auto ? Array(state.rows * state.columns).fill().map(i => {
+      let grid = state.auto ? Array(state.rows * state.columns).fill().map(i => {
           return `<div data-${pfx}type="${gridChildId}"></div>`
         }).join("") :
         state.childarea.map((area, i) => {
           return `<div data-${pfx}type="${gridChildId}" class="div${i}"></div>
             <style>.div${i}{grid-area:${area}}</style>`
         }).join("");
-      sel.components().reset(grid);
+      const css = state.childarea.map((area, i) => {
+        return `.div${i}{grid-area:${area}}`
+      }).join("");
+      sel.components().length > 0 ? sel.components().add(`<style>${generateMedia(css)}</style>`) :
+        sel.components().reset(grid);
       (editor.Grid.visible = false) || (editor.Grid.getEl().style.display = 'none');
-      sel.set('style', {
+      sel.addStyle({
         'grid-template-columns': getters.colTemplate(state)
       });
+    }
+  }
+
+  const generateMedia = (css) => {
+    const device = editor.Devices.get(editor.getDevice());
+    if (device !== '' || device !== 'Desktop') {
+      return `@media (max-width: ${device.get('widthMedia')}){
+        ${css}
+      }`
+    } else {
+      return css
     }
   }
 
@@ -155,12 +176,16 @@ export default (editor, opts = {}) => {
           titleTrait,
           addCellTrait,
         ],
-        style: {
+      },
+      init() {
+        const cc = editor.Css;
+        this.get('classes').pluck('name').indexOf(gridCellClass) < 0 && this.addClass(gridCellClass);
+        cc.getRule(`.${gridCellClass}`) || cc.setRule(`.${gridCellClass}`, {
           display: 'flex',
           'justify-content': 'flex-start',
           'align-items': 'stretch',
           padding: '5px'
-        },
+        });
       },
       ...cellComponent
     }
@@ -210,11 +235,11 @@ export default (editor, opts = {}) => {
           idTrait,
           titleTrait,
           autoTrait,
+          minTrait,
           columnsTrait,
           rowsTrait,
           columnGapTrait,
           rowGapTrait,
-          minTrait,
           resetTrait,
           updateTrait
         ],
@@ -246,12 +271,7 @@ export default (editor, opts = {}) => {
         this.set('rowgap', st.state.rowgap);
         this.set('columngap', st.state.columngap);
         this.set('store', st);
-        this.set('style', {
-          display: 'grid',
-          padding: '10px',
-          height: '500px',
-          'grid-row-gap': '0',
-          'grid-column-gap': '0',
+        this.addStyle({
           'grid-template-rows': st.getters.rowTemplate(st.state),
           'grid-template-columns': st.getters.colTemplate(st.state),
         });
@@ -263,7 +283,6 @@ export default (editor, opts = {}) => {
         this.on("change:rowgap", this.updateRowgap);
         this.on("change:columngap", this.updateColumngap);
         this.on("change:min", this.updateMin);
-        this.on("change:attributes.style.height", () => editor.Grid.update(this.get('store')));
         this.on("change:status", this.onStatusChange);
       },
       updateRows() {
@@ -277,7 +296,7 @@ export default (editor, opts = {}) => {
         store.mutations.updateRows(store.state, rows);
         store.mutations.adjustArr(store.state, payload);
         editor.Grid.update(store);
-        this.set('style', {
+        this.addStyle({
           'grid-template-rows': store.getters.rowTemplate(store.state)
         });
       },
@@ -292,7 +311,7 @@ export default (editor, opts = {}) => {
         store.mutations.updateColumns(store.state, columns);
         store.mutations.adjustArr(store.state, payload);
         editor.Grid.update(store);
-        this.set('style', {
+        this.addStyle({
           'grid-template-columns': store.getters.colTemplate(store.state)
         });
       },
@@ -300,8 +319,8 @@ export default (editor, opts = {}) => {
         const rowgap = this.get('rowgap');
         const store = this.get('store');
         store.mutations.updateRowGap(store.state, parseInt(rowgap));
-        editor.Grid.update(store);
-        this.set('style', {
+        editor.Grid.updateChildren(store);
+        this.addStyle({
           'grid-row-gap': `${rowgap}px`
         });
       },
@@ -309,8 +328,8 @@ export default (editor, opts = {}) => {
         const columngap = this.get('columngap');
         const store = this.get('store');
         store.mutations.updateColumnGap(store.state, parseInt(columngap));
-        editor.Grid.update(store);
-        this.set('style', {
+        editor.Grid.updateChildren(store);
+        this.addStyle({
           'grid-column-gap': `${columngap}px`
         });
       },
@@ -318,14 +337,12 @@ export default (editor, opts = {}) => {
         const min = parseInt(this.get('min'));
         const store = this.get('store');
         store.mutations.updateMin(store.state, min);
-        //editor.Grid.update(store);
       },
       updateAuto() {
         const auto = !!this.get('auto');
         const store = this.get('store');
         store.mutations.updateAuto(store.state, auto);
-        if (auto)(editor.Grid.visible = false) || (editor.Grid.getEl().style.display = 'none')
-        //editor.Grid.update(store);
+        if (auto)(editor.Grid.visible = false) || (editor.Grid.getEl().style.display = 'none');
       },
       onStatusChange() {
         const status = this.get('status');
