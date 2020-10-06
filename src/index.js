@@ -56,6 +56,224 @@ export default (editor, opts = {}) => {
       }],
       // Minimum value the screen can be resized
       minScreenSize: 250,
+      // Icons Map
+      icons: [{
+          type: 'body',
+          icon: '<i class="fa fa-cubes"></i>'
+        },
+        {
+          type: 'wrapper',
+          icon: '<i class="fa fa-cubes"></i>'
+        },
+        {
+          type: 'custom-code',
+          icon: '<i class="fa fa-code"></i>'
+        },
+        {
+          type: 'script',
+          icon: '<i class="fa fa-file-code-o"></i>'
+        },
+        {
+          type: 'comment',
+          icon: '<i class="fa fa-commenting-o"></i>'
+        },
+        {
+          type: 'text',
+          icon: '<i class="fa fa-i-cursor"></i>'
+        },
+        {
+          type: 'textnode',
+          icon: '<i class="fa fa-i-cursor"></i>'
+        },
+        {
+          type: 'header',
+          icon: '<i class="fa fa-header"></i>'
+        },
+        {
+          type: 'box',
+          icon: '<i class="fa fa-square-o"></i>'
+        },
+        {
+          type: 'section',
+          icon: '<i class="fa fa-object-group"></i>'
+        },
+        {
+          type: 'link',
+          icon: '<i class="fa fa-link"></i>'
+        },
+        {
+          type: 'footer',
+          icon: '<i class="fa fa-long-arrow-down"></i>'
+        },
+        {
+          type: 'input',
+          icon: '<i class="fa fa-keyboard-o"></i>'
+        },
+        {
+          type: 'button',
+          icon: '<i class="fa fa-square"></i>'
+        },
+        {
+          type: 'image',
+          icon: '<i class="fa fa-file-image-o"></i>'
+        },
+        {
+          type: 'video',
+          icon: '<i class="fa fa-file-video-o"></i>'
+        },
+        {
+          type: 'row',
+          icon: '<i class="fa fa-ellipsis-h"></i>'
+        },
+        {
+          type: 'cell',
+          icon: '<i class="fa fa-ellipsis-v"></i>'
+        },
+        {
+          type: 'table',
+          icon: '<i class="fa fa-table"></i>'
+        },
+        {
+          type: 'thead',
+          icon: '<i class="fa fa-header"></i>'
+        },
+        {
+          type: 'tbody',
+          icon: '<i class="fa fa-book"></i>'
+        },
+        {
+          type: 'tfoot',
+          icon: '<i class="fa fa-anchor"></i>'
+        },
+        {
+          type: 'column',
+          icon: '<i class="fa fa-ellipsis-v"></i>'
+        },
+        {
+          type: 'map',
+          icon: '<i class="fa fa-map-o"></i>'
+        },
+        {
+          type: 'label',
+          icon: '<i class="fa fa-tag"></i>'
+        },
+        {
+          type: 'checkbox',
+          icon: '<i class="fa fa-check-square-o"></i>'
+        },
+        {
+          type: 'textarea',
+          icon: '<i class="fa fa-align-left"></i>'
+        },
+        {
+          type: 'select',
+          icon: '<i class="fa fa-caret-square-o-down"></i>'
+        },
+        {
+          type: 'radio',
+          icon: '<i class="fa fa-dot-circle-o"></i>'
+        },
+        {
+          type: 'form',
+          icon: '<i class="fa fa-address-card-o"></i>'
+        },
+        {
+          type: 'svg',
+          icon: '<i class="fa fa-diamond"></i>'
+        },
+        {
+          type: 'svg-in',
+          icon: '<i class="fa fa-diamond"></i>'
+        },
+        {
+          type: 'nav',
+          icon: '<i class="fa fa-location-arrow"></i>'
+        },
+        {
+          type: 'navbar',
+          icon: '<i class="fa fa-map-signs"></i>'
+        },
+        {
+          type: 'navbar-container',
+          icon: '<i class="fa fa-object-group"></i>'
+        },
+        {
+          type: 'navbar-menu',
+          icon: '<i class="fa fa-bars"></i>'
+        },
+        {
+          type: 'burger-menu',
+          icon: '<i class="fa fa-bars"></i>'
+        },
+        {
+          type: 'burger-line',
+          icon: '<i class="fa fa-bars"></i>'
+        },
+        {
+          type: 'span',
+          icon: '<i class="fa fa-columns"></i>'
+        },
+        {
+          type: 'countdown',
+          icon: '<i class="fa fa-clock-o"></i>'
+        },
+        {
+          type: 'twitch',
+          icon: '<i class="fa fa-twitch"></i>'
+        },
+        {
+          type: 'tooltip',
+          icon: '<i class="fa fa-comment-o"></i>'
+        },
+        {
+          type: 'tabs',
+          icon: '<i class="fa fa-list-alt"></i>'
+        },
+        {
+          type: 'tab',
+          icon: '<i class="fa fa-long-arrow-right"></i>'
+        },
+        {
+          type: 'tab-container',
+          icon: '<i class="fa fa-object-group"></i>'
+        },
+        {
+          type: 'tab-content',
+          icon: '<i class="fa fa-align-center"></i>'
+        },
+        {
+          type: 'lory-slider',
+          icon: '<i class="fa fa-sliders"></i>'
+        },
+        {
+          type: 'lory-frame',
+          icon: '<i class="fa fa-window-maximize"></i>'
+        },
+        {
+          type: 'lory-slides',
+          icon: '<i class="fa fa-file-powerpoint-o"></i>'
+        },
+        {
+          type: 'lory-slide',
+          icon: '<i class="fa fa-play-circle-o"></i>'
+        },
+        {
+          type: 'lory-prev',
+          icon: '<i class="fa fa-caret-square-o-left"></i>'
+        },
+        {
+          type: 'lory-next',
+          icon: '<i class="fa fa-caret-square-o-right"></i>'
+        },
+        {
+          type: 'typed',
+          icon: '<i class="fa fa-text-height"></i>'
+        },
+        {
+          type: 'default',
+          icon: '<i class="fa fa-cube"></i>'
+        }
+      ]
     },
     ...opts
   };
@@ -79,172 +297,13 @@ export default (editor, opts = {}) => {
     const $ = editor.$;
     const pn = editor.Panels;
     const pfx = editor.Config.stylePrefix;
+    const cmp = editor.Components;
 
     //? Map layer icons to components
-    editor.Components.componentTypes.forEach(type => {
-      switch (type.id) {
-        case 'body':
-          type.model.prototype.defaults.icon = '<i class="fa fa-cubes"></i>';
-          break;
-        case 'wrapper':
-          type.model.prototype.defaults.icon = '<i class="fa fa-cubes"></i>';
-          break;
-        case 'custom-code':
-          type.model.prototype.defaults.icon = '<i class="fa fa-code"></i>';
-          break;
-        case 'script':
-          type.model.prototype.defaults.icon = '<i class="fa fa-file-code-o"></i>';
-          break;
-        case 'comment':
-          type.model.prototype.defaults.icon = '<i class="fa fa-commenting-o"></i>';
-          break;
-        case 'text':
-          type.model.prototype.defaults.icon = '<i class="fa fa-i-cursor"></i>';
-          break;
-        case 'textnode':
-          type.model.prototype.defaults.icon = '<i class="fa fa-i-cursor"></i>';
-          break;
-        case 'header':
-          type.model.prototype.defaults.icon = '<i class="fa fa-header"></i>';
-          break;
-        case 'box':
-          type.model.prototype.defaults.icon = '<i class="fa fa-square-o"></i>';
-          break;
-        case 'section':
-          type.model.prototype.defaults.icon = '<i class="fa fa-object-group"></i>';
-          break;
-        case 'link':
-          type.model.prototype.defaults.icon = '<i class="fa fa-link"></i>';
-          break;
-        case 'footer':
-          type.model.prototype.defaults.icon = '<i class="fa fa-long-arrow-down"></i>'; //!type.model.prototype.defaults.icon
-          break;
-        case 'input':
-          type.model.prototype.defaults.icon = '<i class="fa fa-keyboard-o"></i>';
-          break;
-        case 'button':
-          type.model.prototype.defaults.icon = '<i class="fa fa-square"></i>'; //!type.model.prototype.defaults.icon
-          break;
-        case 'image':
-          type.model.prototype.defaults.icon = '<i class="fa fa-file-image-o"></i>';
-          break;
-        case 'video':
-          type.model.prototype.defaults.icon = '<i class="fa fa-file-video-o"></i>';
-          break;
-        case 'row':
-          type.model.prototype.defaults.icon = '<i class="fa fa-ellipsis-h"></i>';
-          break;
-        case 'cell':
-          type.model.prototype.defaults.icon = '<i class="fa fa-ellipsis-v"></i>';
-          break;
-        case 'table':
-          type.model.prototype.defaults.icon = '<i class="fa fa-table"></i>';
-          break;
-        case 'thead':
-          type.model.prototype.defaults.icon = '<i class="fa fa-header"></i>'; //!type.model.prototype.defaults.icon
-          break;
-        case 'tbody':
-          type.model.prototype.defaults.icon = '<i class="fa fa-book"></i>'; //!type.model.prototype.defaults.icon
-          break;
-        case 'tfoot':
-          type.model.prototype.defaults.icon = '<i class="fa fa-anchor"></i>'; //!type.model.prototype.defaults.icon
-          break;
-        case 'column':
-          type.model.prototype.defaults.icon = '<i class="fa fa-ellipsis-v"></i>';
-          break;
-        case 'map':
-          type.model.prototype.defaults.icon = '<i class="fa fa-map-o"></i>';
-          break;
-        case 'label':
-          type.model.prototype.defaults.icon = '<i class="fa fa-tag"></i>';
-          break;
-        case 'checkbox':
-          type.model.prototype.defaults.icon = '<i class="fa fa-check-square-o"></i>';
-          break;
-        case 'textarea':
-          type.model.prototype.defaults.icon = '<i class="fa fa-align-left"></i>';
-          break;
-        case 'select':
-          type.model.prototype.defaults.icon = '<i class="fa fa-caret-square-o-down"></i>';
-          break;
-        case 'radio':
-          type.model.prototype.defaults.icon = '<i class="fa fa-dot-circle-o"></i>';
-          break;
-        case 'form':
-          type.model.prototype.defaults.icon = '<i class="fa fa-address-card-o"></i>'; //!type.model.prototype.defaults.icon
-          break;
-        case 'svg':
-          type.model.prototype.defaults.icon = '<i class="fa fa-diamond"></i>';
-          break;
-        case 'svg-in':
-          type.model.prototype.defaults.icon = '<i class="fa fa-diamond"></i>';
-          break;
-        case 'nav':
-          type.model.prototype.defaults.icon = '<i class="fa fa-location-arrow"></i>';
-          break;
-        case 'navbar':
-          type.model.prototype.defaults.icon = '<i class="fa fa-map-signs"></i>';
-          break;
-        case 'navbar-container':
-          type.model.prototype.defaults.icon = '<i class="fa fa-object-group"></i>';
-          break;
-        case 'navbar-menu':
-          type.model.prototype.defaults.icon = '<i class="fa fa-bars"></i>';
-          break;
-        case 'burger-menu':
-          type.model.prototype.defaults.icon = '<i class="fa fa-bars"></i>';
-          break;
-        case 'burger-line':
-          type.model.prototype.defaults.icon = '<i class="fa fa-bars"></i>';
-          break;
-        case 'span':
-          type.model.prototype.defaults.icon = '<i class="fa fa-columns"></i>';
-          break;
-        case 'countdown':
-          type.model.prototype.defaults.icon = '<i class="fa fa-clock-o"></i>';
-          break;
-        case 'twitch':
-          type.model.prototype.defaults.icon = '<i class="fa fa-twitch"></i>';
-          break;
-        case 'tooltip':
-          type.model.prototype.defaults.icon = '<i class="fa fa-comment-o"></i>';
-          break;
-        case 'tabs':
-          type.model.prototype.defaults.icon = '<i class="fa fa-list-alt"></i>';
-          break;
-        case 'tab':
-          type.model.prototype.defaults.icon = '<i class="fa fa-long-arrow-right"></i>';
-          break;
-        case 'tab-container':
-          type.model.prototype.defaults.icon = '<i class="fa fa-object-group"></i>';
-          break;
-        case 'tab-content':
-          type.model.prototype.defaults.icon = '<i class="fa fa-align-center"></i>';
-          break;
-        case 'lory-slider':
-          type.model.prototype.defaults.icon = '<i class="fa fa-sliders"></i>';
-          break;
-        case 'lory-frame':
-          type.model.prototype.defaults.icon = '<i class="fa fa-window-maximize"></i>';
-          break;
-        case 'lory-slides':
-          type.model.prototype.defaults.icon = '<i class="fa fa-file-powerpoint-o"></i>';
-          break;
-        case 'lory-slide':
-          type.model.prototype.defaults.icon = '<i class="fa fa-play-circle-o"></i>';
-          break;
-        case 'lory-prev':
-          type.model.prototype.defaults.icon = '<i class="fa fa-caret-square-o-left"></i>';
-          break;
-        case 'lory-next':
-          type.model.prototype.defaults.icon = '<i class="fa fa-caret-square-o-right"></i>';
-          break;
-        case 'typed':
-          type.model.prototype.defaults.icon = '<i class="fa fa-text-height"></i>';
-          break;
-        default:
-          type.model.prototype.defaults.icon = '<i class="fa fa-cube"></i>';
-      }
+    options.icons.forEach(icon => {
+      try {
+        cmp.getType(icon.type).model.prototype.defaults.icon = icon.icon;
+      } catch (error) {}
     });
 
     // Load and show settings and style manager
