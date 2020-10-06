@@ -4,6 +4,6 @@
 - [x] DOM breadcrumbs
 - [ ] Layer icons map
 - [x] Grid Component
-- [ ] Canvas Resizer
+- [x] Canvas Resizer
 - [ ] Cubic-bezier-editor
 - [ ] npm package
