@@ -11,6 +11,12 @@ import {
 export default (editor, opts = {}) => {
   const options = {
     ...{
+      // use plugin panels
+      panels: 0,
+      // show canvas resizer
+      resizer: 1,
+      // show breadcrumbs
+      breadcrumbs: 1,
       // label for grid block
       labelGrid: 'Grid',
       // category for grid block
@@ -283,13 +289,13 @@ export default (editor, opts = {}) => {
   // Add blocks
   loadBlocks(editor, options);
   // Add panels
-  loadPanels(editor, options);
+  options.panels && loadPanels(editor, options);
   // Add breadcrumbs
-  breadcrumbs(editor, options);
+  options.breadcrumbs && breadcrumbs(editor, options);
   // Add palette
   palette(editor, options);
   // Load resizer
-  resizer(editor, options);
+  options.resizer && resizer(editor, options);
   // Load grid
   editor.Grid = grid(editor, options);
 
@@ -333,17 +339,5 @@ export default (editor, opts = {}) => {
     const openLm = pn.getButton('views', 'open-layers');
     openLm && openLm.set('active', 1);
     $(`.${pfx}layer-name`)[0].innerHTML = '<i class="fa fa-cubes"></i> Body';
-
-    // Open block manager
-    const openBlocksBtn = pn.getButton('views', 'open-blocks');
-    openBlocksBtn && openBlocksBtn.set('active', 1);
-
-    editor.addComponents(
-      `<div style="margin:100px; padding:25px;">
-            Content loaded from the plugin
-        </div>`, {
-        at: 0
-      }
-    )
   });
 };
