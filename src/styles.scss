@@ -450,3 +450,133 @@ $breadcrumbsHoverColor: #6c8fdb;
     min-height: 50px;
     background: #6d1a39;
 }
+
+/* RESEZING GLUTTER */
+.iframe-handle-container .handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 14;
+}
+
+.iframe-handle-container .handle:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -3px;
+    width: 4px;
+    height: 100%;
+    background: #178df7;
+    display: none;
+}
+
+.iframe-handle-container .right-handle {
+    left: -1px;
+    width: 14px;
+}
+
+.iframe-handle-container .left-handle {
+    left: -1px;
+    width: 3px;
+    pointer-events: all;
+    cursor: col-resize;
+}
+
+.iframe-handle-container .tab-handle {
+    position: absolute;
+    top: 50%;
+    width: 14px;
+    height: 38px;
+    margin-top: -19px;
+    background: #808080;
+    cursor: col-resize;
+    pointer-events: all;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.iframe-handle-container .tab-handle:before,
+.iframe-handle-container .tab-handle:after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: #a6a6a6;
+}
+
+.iframe-handle-container .tab-handle:before {
+    left: 5px;
+}
+
+.iframe-handle-container .tab-handle:after {
+    left: 8px;
+}
+
+.iframe-handle-container .tab-handle:hover {
+    background: #178df7;
+}
+
+.iframe-handle-container .tab-handle:hover:before,
+.iframe-handle-container .tab-handle:hover:after {
+    background: #48a5f9;
+}
+
+.iframe-handle-container .gutter-handle {
+    position: absolute;
+    top: 0;
+    left: -3px;
+    width: 4px;
+    height: 100%;
+    cursor: col-resize;
+    pointer-events: all;
+}
+
+.iframe-handle-container:hover .handle:before {
+    display: block;
+}
+
+.iframe-handle-container:hover .tab-handle {
+    background: #178df7;
+    border-color: #178df7;
+}
+
+.iframe-handle-container:hover .tab-handle:before,
+.iframe-handle-container:hover .tab-handle:after {
+    background: #48a5f9;
+}
+
+.dim-indicator {
+    position: absolute;
+    top: 10%;
+    height: auto;
+    margin-left: 22px;
+    pointer-events: all;
+    font-size: 14px;
+    display: none;
+    padding: 2px 9px;
+    border-radius: 4px !important;
+    color: #ffffff;
+    /* font-weight: bold; */
+    width: 156px;
+    background-color: rgb(0, 0, 0);
+}
+
+.mobile-wrapper {
+    position: absolute;
+    top: 15%;
+    margin-left: -30px;
+    pointer-events: all;
+    color: #ffffff;
+    width: 340px;
+    padding: 14px;
+}
+
+.mobile-list li {
+    background: #808080;
+    padding: 3px;
+    border-radius: 4px !important;
+    margin-bottom: 5px;
+    list-style-type: none;
+    padding-left: 11px;
+}
