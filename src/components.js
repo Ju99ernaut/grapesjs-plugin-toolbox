@@ -26,6 +26,14 @@ export default (editor, opts = {}) => {
     label: 'Title'
   }
 
+  const privateCls = [`.${cellItemClass}`, `.${gridCellClass}`];
+  editor.on(
+    'selector:add',
+    selector =>
+    privateCls.indexOf(selector.getFullName()) >= 0 &&
+    selector.set('private', 1)
+  );
+
   const addCellTrait = {
     name: 'addCell',
     type: 'button',
@@ -33,13 +41,8 @@ export default (editor, opts = {}) => {
     text: 'Add Cell',
     command: editor => {
       const comp = editor.getSelected();
-      comp && comp.components().add([{
-        tagName: 'div',
-        name: 'cell-item',
-        attributes: {
-          class: cellItemClass
-        },
-        resizable: {
+      comp && comp.components().add(`<div data-${pfx}name="cell-item" class="${cellItemClass}" 
+        data-${pfx}resizable='${JSON.stringify({
           tl: 0,
           tc: 0,
           tr: 0,
@@ -49,9 +52,10 @@ export default (editor, opts = {}) => {
           br: 0,
           bc: 0,
           keyWidth: 'flex-basis',
-          minDim: 1
-        }
-      }]);
+          minDim: 1,
+          step: 0.2,
+          currentUnit: 1
+        })}'></div>`);
       const cc = editor.Css;
       cc.getRule(`.${cellItemClass}`) || cc.setRule(`.${cellItemClass}`, {
         'min-height': '75px',
@@ -171,6 +175,7 @@ export default (editor, opts = {}) => {
     model: {
       defaults: {
         // ...
+        icon: '<i class="fa fa-square-o"></i>',
         traits: [
           idTrait,
           titleTrait,
@@ -230,6 +235,7 @@ export default (editor, opts = {}) => {
     model: {
       defaults: {
         // Default props
+        icon: '<i class="fa fa-table"></i>',
         toolbar,
         traits: [
           idTrait,
