@@ -4,7 +4,8 @@ import loadPanels from './panels';
 import grid from './grid';
 import {
   breadcrumbs,
-  palette
+  palette,
+  resizer
 } from './utils';
 
 export default (editor, opts = {}) => {
@@ -52,7 +53,9 @@ export default (editor, opts = {}) => {
         name: 'Background color',
         property: 'background-color',
         type: 'color'
-      }]
+      }],
+      // Minimum value the screen can be resized
+      minScreenSize: 250,
     },
     ...opts
   };
@@ -67,6 +70,8 @@ export default (editor, opts = {}) => {
   breadcrumbs(editor, options);
   // Add palette
   palette(editor, options);
+  // Load resizer
+  resizer(editor, options);
   // Load grid
   editor.Grid = grid(editor, options);
 
