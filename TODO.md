@@ -5,4 +5,4 @@
 - [x] Layer icons map
 - [x] Grid Component
 - [x] Canvas Resizer
-- [ ] npm package
+- [x] npm package
