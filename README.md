@@ -2,11 +2,12 @@
 
 Tools for `grapesjs`
 
->WIP
+[DEMO](https://codepen.io/ju99ernaut/pen/Vwaqdpw)
 
 ### HTML
 ```html
 <link href="https://unpkg.com/grapesjs/dist/css/grapes.min.css" rel="stylesheet">
+<link href="https://unpkg.com/grapesjs-plugin-toolbox/dist/grapesjs-plugin-toolbox.min.css" rel="stylesheet">
 <script src="https://unpkg.com/grapesjs"></script>
 <script src="https://unpkg.com/grapesjs-plugin-toolbox"></script>
 
@@ -35,15 +36,21 @@ body, html {
 
 ## Summary
 
+* Tool in this plugin are 
+  * [Css grid layout tool](https://i.imgur.com/jwXI0MS.mp4)
+  * [Canvas resizer](https://i.imgur.com/GWBJsmI.mp4)
+  * [Palette from image generator](https://i.imgur.com/eeIqyHO.png)
+  * Breadcrumbs
+  * Layer icon mapper
+
 * Plugin name: `grapesjs-plugin-toolbox`
 * Components
-    * `component-id-1`
-    * `component-id-2`
-    * ...
+    * `css-grid`
+    * `grid-cell`
 * Blocks
-    * `block-id-1`
-    * `block-id-2`
-    * ...
+    * `css-grid`
+* Commands
+    * `add-palette`
 
 
 
@@ -51,8 +58,23 @@ body, html {
 
 | Option | Description | Default |
 |-|-|-
-| `option1` | Description option | `default value` |
-
+| `panels` | use plugin panels | `false` |
+| `resizer` | include canvas resizer | `true` |
+| `breadcrumbs` | include breadcrumbs | `true` |
+| `labelGrid` | label for grid block  | `Grid` |
+| `categoryGrid` | category for grid block | `Basic` |
+| `gridBlock` | options to extend grid block | `{}` |
+| `gridComponent` | options to extend grid component model | `{}` |
+| `gridClass` | class for grid block | `grid` |
+| `gridCellClass` | class for grid cell block | `grid-cell` |
+| `cellItemClass` | class for cell item block | `cell-item` |
+| `labelColors` | label for color palette modal | `Image palette` |
+| `labelApply` | label for apply button | `Add` |
+| `palleteIcon` | toolbar icon to open palette modal | `<i class="fa fa-paint-brush"></i>` |
+| `onAdd` | custom logic when palette is added | `0` |
+| `refreshPalette` | color pickers to refresh color palettes | `[{sector: 'typography',name: 'Color',property: 'color',type: 'color',defaults: 'black'},...]` |
+| `minScreenSize` | minimum value the screen can be resized | `250` |
+| `icons` | icons to map to components | `[{type: 'default', icon:'<i class="fa fa-cube"></i>'},...]` |
 
 
 ## Download
@@ -71,6 +93,7 @@ body, html {
 Directly in the browser
 ```html
 <link href="https://unpkg.com/grapesjs/dist/css/grapes.min.css" rel="stylesheet"/>
+<link href="https://unpkg.com/grapesjs-plugin-toolbox/dist/grapesjs-plugin-toolbox.min.css" rel="stylesheet">
 <script src="https://unpkg.com/grapesjs"></script>
 <script src="path/to/grapesjs-plugin-toolbox.min.js"></script>
 
@@ -93,6 +116,7 @@ Modern javascript
 import grapesjs from 'grapesjs';
 import plugin from 'grapesjs-plugin-toolbox';
 import 'grapesjs/dist/css/grapes.min.css';
+import 'grapesjs-plugin-toolbox/dist/grapesjs-plugin-toolbox.min.css';
 
 const editor = grapesjs.init({
   container : '#gjs',
