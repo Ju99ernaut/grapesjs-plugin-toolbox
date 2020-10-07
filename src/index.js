@@ -27,6 +27,8 @@ export default (editor, opts = {}) => {
       gridComponent: {},
       // options to extend cell component model
       cellComponent: {},
+      // grid class name
+      gridClass: 'grid',
       // grid cell class name
       gridCellClass: 'grid-cell',
       // cell item class name
@@ -62,6 +64,8 @@ export default (editor, opts = {}) => {
       }],
       // Minimum value the screen can be resized
       minScreenSize: 250,
+      // Dampen the drag speed
+      dragDampen: 1,
       // Icons Map
       icons: [{
           type: 'body',
@@ -339,5 +343,6 @@ export default (editor, opts = {}) => {
     const openLm = pn.getButton('views', 'open-layers');
     openLm && openLm.set('active', 1);
     $(`.${pfx}layer-name`)[0].innerHTML = '<i class="fa fa-cubes"></i> Body';
+    openSm && openSm.set('active', 1);
   });
 };
