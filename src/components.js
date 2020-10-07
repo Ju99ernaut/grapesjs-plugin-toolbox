@@ -12,6 +12,7 @@ export default (editor, opts = {}) => {
   const {
     gridComponent,
     cellComponent,
+    gridClass,
     gridCellClass,
     cellItemClass
   } = opts;
@@ -26,7 +27,7 @@ export default (editor, opts = {}) => {
     label: 'Title'
   }
 
-  const privateCls = [`.${cellItemClass}`, `.${gridCellClass}`];
+  const privateCls = [`.${gridClass}`, `.${cellItemClass}`, `.${gridCellClass}`];
   editor.on(
     'selector:add',
     selector =>
@@ -145,11 +146,11 @@ export default (editor, opts = {}) => {
           return `<div data-${pfx}type="${gridChildId}"></div>`
         }).join("") :
         state.childarea.map((area, i) => {
-          return `<div data-${pfx}type="${gridChildId}" class="div${i}"></div>
-            <style>.div${i}{grid-area:${area}}</style>`
+          return `<div data-${pfx}type="${gridChildId}" class="${sel.getId() + '-div' + i}"></div>
+            <style>.${sel.getId() + '-div' + i}{grid-area:${area}}</style>`
         }).join("");
       const css = state.childarea.map((area, i) => {
-        return `.div${i}{grid-area:${area}}`
+        return `.${sel.getId() + '-div' + i}{grid-area:${area}}`
       }).join("");
       sel.components().length > 0 ? sel.components().add(`<style>${generateMedia(css)}</style>`) :
         sel.components().reset(grid);
@@ -174,7 +175,6 @@ export default (editor, opts = {}) => {
   domc.addType(gridChildId, {
     model: {
       defaults: {
-        // ...
         icon: '<i class="fa fa-square-o"></i>',
         traits: [
           idTrait,
@@ -249,13 +249,6 @@ export default (editor, opts = {}) => {
           resetTrait,
           updateTrait
         ],
-        style: {
-          display: 'grid',
-          padding: '10px',
-          height: '500px',
-          'grid-row-gap': '0',
-          'grid-column-gap': '0'
-        },
         resizable: {
           tl: 0,
           tc: 0,
@@ -270,6 +263,7 @@ export default (editor, opts = {}) => {
         auto: false
       },
       init() {
+        const cc = editor.Css;
         const st = store(opts);
         st.mutations.initialArrIndex(st.state, '');
         this.set('rows', st.state.rows);
@@ -280,6 +274,13 @@ export default (editor, opts = {}) => {
         this.addStyle({
           'grid-template-rows': st.getters.rowTemplate(st.state),
           'grid-template-columns': st.getters.colTemplate(st.state),
+        });
+        this.get('classes').pluck('name').indexOf(gridClass) < 0 && this.addClass(gridClass);
+        cc.getRule(`.${gridClass}`) || cc.setRule(`.${gridClass}`, {
+          display: 'grid',
+          padding: '10px',
+          height: '95%',
+          width: '100%',
         });
         if (!editor.Grid.container || !editor.Grid.el) editor.Grid.render(`#${pfx}tools`, st);
         editor.Grid.update(st);
