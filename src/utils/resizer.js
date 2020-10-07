@@ -1,3 +1,5 @@
+// Adated from https://github.com/artf/grapesjs/issues/1368
+
 export default (editor, opts = {}) => {
     const $ = editor.$;
     const deviceManager = editor.Devices;
@@ -20,15 +22,23 @@ export default (editor, opts = {}) => {
     </div>`);
 
     editor.on('change:device', () => {
-        $('.gjs-frame').css('width', '');
+        const frame = $('.gjs-frame');
+        frame.css({
+            'width': '',
+            'transition': 'width 0.35s ease,height 0.35s ease'
+        });
         $('.dim-indicator').css('display', 'none');
         setTimeout(() => {
             const device = deviceManager.get(editor.getDevice());
             showDeviceResolution(device);
             initDeviceEventHandle(device);
             getWindowDims();
-        }, 500);
+            frame.css('transition', 'none');
+        }, 600);
     });
+
+    editor.on('run:preview', () => $('.iframe-handle-container').css('display', 'none'));
+    editor.on('stop:preview', () => $('.iframe-handle-container').css('display', 'block'));
 
     /**
      * This function will receive a screen type and it will prompt the description on the left side of the canvas.
@@ -96,7 +106,7 @@ export default (editor, opts = {}) => {
 
                         // We need to change the iframe width dynamically
                         const total = uleft - editor.Canvas.getOffset().left - widthIframe;
-                        let width = widthIframe + total;
+                        let width = widthIframe + total * opts.dragDampen;
 
                         $('.js-mobile-list').find(".mobile-item").addClass("hidden");
 
@@ -126,9 +136,6 @@ export default (editor, opts = {}) => {
                 stop() {
                     try {
                         $(".handle-mask").remove();
-                        let left = editor.Canvas.getOffset().left;
-                        $(".left-handle").css("left", left);
-                        $(".right-handle").css("left", left + editor.Canvas.getFrameEl().offsetWidth);
                     } catch (err) {
                         console.error(err);
                     }
@@ -214,23 +221,21 @@ const draggable = (element, opts = {}) => {
         pos3 = e.clientX;
         pos4 = e.clientY;
         if (opts.axis === 'x') {
-            opts.drag(element.offsetLeft - pos1);
             element.style.left = (element.offsetLeft - pos1) + 'px';
+            opts.drag(element.offsetLeft);
         } else if (opts.axis === 'y') {
-            opts.drag(element.offsetTop - pos2);
             element.style.top = (element.offsetTop - pos2) + 'px';
+            opts.drag(element.offsetTop);
         } else {
-            opts.drag(element.offsetLeft - pos1, element.offsetTop - pos2);
             element.style.left = (element.offsetLeft - pos1) + 'px';
             element.style.top = (element.offsetTop - pos2) + 'px';
+            opts.drag(element.offsetLeft, element.offsetTop);
         }
     }
 
     const closeDragElement = () => {
         document.onmouseup = null;
         document.onmousemove = null;
-        setTimeout(() => {
-            opts.stop();
-        }, 200);
+        opts.stop();
     }
 }
