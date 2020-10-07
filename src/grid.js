@@ -1,3 +1,5 @@
+// Based on https://github.com/sdras/cssgridgenerator
+
 export default (editor, opts = {}) => {
     const {
         $
@@ -118,7 +120,7 @@ export default (editor, opts = {}) => {
                 this.container.append(this.el);
                 editor.on('styleManager:change:height run:resize', () => {
                     const st = editor.getSelected().get('store');
-                    st && editor.Grid.update(st);
+                    st && editor.Grid.visible && editor.Grid.update(st);
                 });
             }
         },
