@@ -58,8 +58,10 @@ body, html {
 
 | Option | Description | Default |
 |-|-|-
-| `panels` | use plugin panels | `false` |
+| `panels` | use plugin panels | `false` |'
+| `traitsInSm` | move traits/settings to styles panel | `true` |
 | `resizer` | include canvas resizer | `true` |
+| `hideOnZoom` | hide resizer if zoom is not 100 | `true` |
 | `breadcrumbs` | include breadcrumbs | `true` |
 | `labelGrid` | label for grid block  | `Grid` |
 | `categoryGrid` | category for grid block | `Basic` |
