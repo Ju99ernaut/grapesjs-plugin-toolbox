@@ -52,7 +52,23 @@ body, html {
 * Commands
     * `add-palette`
 
+## Grid Component
 
+>Here `template guides` referes to the dotted lines and colored template areas whereas `grid cells` referes to the actual divs generated from the `template guide`.
+
+If the grid component is not empty the update button will only update the css to avoid overwriting any content. Check [here](https://i.imgur.com/jwXI0MS.mp4) to see usage example.
+
+* Traits
+    * `auto-fill` - generate grid automatically(disables guides)
+    * `min` - min cell width in px if auto-fill is used
+    * `columns`
+    * `rows`
+    * `columngap`
+    * `rowgap`
+    * `toggle` - show/hide template guides if not auto-fill(same function as toolbar icon)
+    * `reset` - reset colored template areas used to generate grid
+    * `clear` - remove grid cells
+    * `update` - generates grid cells or updates css if grid component isn't empty 
 
 ## Options
 
