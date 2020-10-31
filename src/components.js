@@ -118,8 +118,32 @@ export default (editor, opts = {}) => {
     min: 1,
   }
 
+  const toggleTrait = {
+    name: 'toggle',
+    label: 'Guides',
+    type: 'button',
+    full: true,
+    text: 'Toggle',
+    command: e => {
+      if (!e.getSelected().get('auto')) {
+        e.Grid.visible = !e.Grid.visible;
+        e.Grid.update(e.Grid.selected.get('store'));
+      }
+    }
+  }
+
+  const clearTrait = {
+    name: 'clear',
+    label: 'Cells',
+    type: 'button',
+    full: true,
+    text: 'Clear',
+    command: editor => editor.getSelected().components.reset()
+  }
+
   const resetTrait = {
     name: 'reset',
+    label: 'Guides',
     type: 'button',
     full: true,
     text: 'Reset',
@@ -132,6 +156,7 @@ export default (editor, opts = {}) => {
 
   const updateTrait = {
     name: 'update',
+    label: 'Cells',
     type: 'button',
     full: true,
     text: 'Update',
@@ -246,7 +271,9 @@ export default (editor, opts = {}) => {
           rowsTrait,
           columnGapTrait,
           rowGapTrait,
+          toggleTrait,
           resetTrait,
+          clearTrait,
           updateTrait
         ],
         resizable: {
