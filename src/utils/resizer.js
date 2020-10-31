@@ -180,7 +180,10 @@ const draggable = (element, opts = {}) => {
     let pos1 = 0,
         pos2 = 0,
         pos3 = 0,
-        pos4 = 0;
+        pos4 = 0,
+        push = 5,
+        falseCountX = 0,
+        falseCountY = 0;
 
     element.addEventListener('mousedown', e => dragMouseDown(e));
 
@@ -205,11 +208,27 @@ const draggable = (element, opts = {}) => {
         pos4 = e.clientY;
         if (opts.axis === 'x' || opts.axis === 'xy') {
             element.style.left = (element.offsetLeft - pos1) + 'px';
-            !opts.drag(element.offsetLeft) && (element.style.left = (element.offsetLeft + pos1) + 'px');
+            if (!opts.drag(element.offsetLeft)) {
+                if (falseCountX) {
+                    element.style.left = (element.offsetLeft + pos1) + Math.sign(pos1) * push + 'px';
+                    falseCountX = 0;
+                } else {
+                    element.style.left = (element.offsetLeft + pos1) + 'px'
+                    falseCountX++;
+                }
+            };
         }
         if (opts.axis === 'y' || opts.axis === 'xy') {
             element.style.top = (element.offsetTop - pos2) + 'px';
-            !opts.drag(element.offsetTop) && (element.style.top = (element.offsetTop + pos2) + 'px');
+            if (!opts.drag(element.offsetTop)) {
+                if (falseCountY) {
+                    element.style.top = (element.offsetTop + pos2) + Math.sign(pos2) * push + 'px';
+                    falseCountY = 0
+                } else {
+                    element.style.top = (element.offsetTop + pos2) + 'px';
+                    falseCountY++;
+                }
+            };
         }
     }
 
