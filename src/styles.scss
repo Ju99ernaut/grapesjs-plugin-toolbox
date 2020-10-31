@@ -119,11 +119,6 @@ $breadcrumbsHoverColor: #6c8fdb;
     min-height: 40px;
 }
 
-##{$prefix}sm-float,
-.#{$prefix}pn-views .fa-cog {
-    display: none;
-}
-
 .#{$prefix}pn-panel.#{$prefix}pn-views {
     padding: 0;
     border-bottom: none;
@@ -133,7 +128,6 @@ $breadcrumbsHoverColor: #6c8fdb;
     margin: 0;
     height: 40px;
     padding: 10px;
-    width: 33.3333%;
     border-bottom: 2px solid rgba(0, 0, 0, 0.3);
 }
 
