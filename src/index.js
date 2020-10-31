@@ -66,6 +66,10 @@ export default (editor, opts = {}) => {
       minScreenSize: 250,
       // Dampen the drag speed
       dragDampen: 1,
+      // Hide if zoom is not 100
+      hideOnZoom: 1,
+      // Add settings to style manager
+      traitsInSm: 1,
       // Icons Map
       icons: [{
           type: 'body',
@@ -323,21 +327,26 @@ export default (editor, opts = {}) => {
     openSm && openSm.set('active', 1);
 
     // Add Settings Sector
-    let traitsSector = $(`<div class="${pfx}sm-sector no-select">
+    if (options.traitsInSm) {
+      let traitsSector = $(`<div class="${pfx}sm-sector no-select">
       <div class="${pfx}sm-title"><span class="icon-settings fa fa-cog"></span> Settings</div>
       <div class="${pfx}sm-properties" style="display: none;"></div></div>`);
-    const traitsProps = traitsSector.find(`.${pfx}sm-properties`);
-    traitsProps.append($(`.${pfx}trt-traits`));
-    $(`.${pfx}sm-sectors`).before(traitsSector);
-    traitsSector.find(`.${pfx}sm-title`).on('click', function () {
-      let traitStyle = traitsProps.get(0).style;
-      let hidden = traitStyle.display == 'none';
-      if (hidden) {
-        traitStyle.display = 'block';
-      } else {
-        traitStyle.display = 'none';
-      }
-    });
+      const traitsProps = traitsSector.find(`.${pfx}sm-properties`);
+      traitsProps.append($(`.${pfx}trt-traits`));
+      $(`.${pfx}sm-sectors`).before(traitsSector);
+      traitsSector.find(`.${pfx}sm-title`).on('click', function () {
+        let traitStyle = traitsProps.get(0).style;
+        let hidden = traitStyle.display == 'none';
+        if (hidden) {
+          traitStyle.display = 'block';
+        } else {
+          traitStyle.display = 'none';
+        }
+      });
+      pn.removeButton('views', 'open-tm');
+    }
+
+    $(`.${pfx}pn-views .${pfx}pn-btn`).css('width', `${100 / pn.getPanel('views').buttons.length}%`);
 
     // Body icon
     const openLm = pn.getButton('views', 'open-layers');
