@@ -13,6 +13,8 @@ export default (editor, opts = {}) => {
         <div class="handle left-handle"></div>
     </div>`);
 
+    editor.Commands.add('smoothresize', () => {});
+
     editor.on('change:device', () => {
         const frame = $('.gjs-frame');
         frame.css({
@@ -119,6 +121,7 @@ export default (editor, opts = {}) => {
                 stop() {
                     try {
                         $(".handle-mask").remove();
+                        editor.runCommand('smoothresize');
                     } catch (err) {
                         console.error(err);
                     }
