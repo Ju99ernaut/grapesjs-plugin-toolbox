@@ -561,22 +561,3 @@ $breadcrumbsHoverColor: #6c8fdb;
     width: 156px;
     background-color: rgb(0, 0, 0);
 }
-
-.mobile-wrapper {
-    position: absolute;
-    top: 15%;
-    margin-left: -30px;
-    pointer-events: all;
-    color: #ffffff;
-    width: 340px;
-    padding: 14px;
-}
-
-.mobile-list li {
-    background: #808080;
-    padding: 3px;
-    border-radius: 4px !important;
-    margin-bottom: 5px;
-    list-style-type: none;
-    padding-left: 11px;
-}
