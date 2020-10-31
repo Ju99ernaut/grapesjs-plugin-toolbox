@@ -3,20 +3,12 @@
 export default (editor, opts = {}) => {
     const $ = editor.$;
     const deviceManager = editor.Devices;
-    const hints = $(`<!-- DEVICE RESOLUTION HINTS-->
-    <div class="device-resolution hidden">
-        <div class="dr-type">Phone - Landscape</div>
-        <div class="dr-measure">Affects 767px and below"</div>
-    </div>
-    
+    const hints = $(`
     <div class="iframe-handle-container hidden">
         <div class="handle right-handle">
             <div class="gutter-handle"></div>
             <div class="tab-handle"></div>
             <div class="dim-indicator"></div>
-            <div class="js-mobile-list  mobile-wrapper">
-                <!--.....-->
-            </div>
         </div>
         <div class="handle left-handle"></div>
     </div>`);
@@ -43,27 +35,9 @@ export default (editor, opts = {}) => {
     /**
      * This function will receive a screen type and it will prompt the description on the left side of the canvas.
      *
-     * @param type
      * @param device
      */
     const showDeviceResolution = (device) => {
-        const name = device.get('name');
-        const width = device.get('widthMedia');
-        const description = `Affects - ${width} and below`;
-
-        const deviceResolution = $(document).find(".gjs-cv-canvas").find(".device-resolution");
-
-        if (deviceResolution.length > 0) {
-            deviceResolution.addClass("hidden");
-            deviceResolution.find(".dr-type").html(name);
-            deviceResolution.find(".dr-measure").html(description);
-        } else {
-            var copyDeviceResolution = $(document).find(".device-resolution").clone(true, true);
-            copyDeviceResolution.find(".dr-type").html(name);
-            copyDeviceResolution.find(".dr-measure").html(description);
-            $(document).find(".gjs-cv-canvas").prepend(copyDeviceResolution);
-        }
-
         const glutterResize = $(document).find(".gjs-cv-canvas").find(".iframe-handle-container");
 
         if (glutterResize.length > 0) {
@@ -107,8 +81,7 @@ export default (editor, opts = {}) => {
                         // We need to change the iframe width dynamically
                         const total = uleft - editor.Canvas.getOffset().left - widthIframe;
                         let width = widthIframe + total * opts.dragDampen;
-
-                        $('.js-mobile-list').find(".mobile-item").addClass("hidden");
+                        let left = editor.Canvas.getOffset().left;
 
                         if (width > maxDeviceSize || width < opts.minScreenSize) {
                             uleft = maxLeftPos;
@@ -118,12 +91,11 @@ export default (editor, opts = {}) => {
                             $('.gjs-frame').css('width', width);
 
                             // Set the position left of the left handle
-                            let left = editor.Canvas.getOffset().left;
                             $(".left-handle").css("left", left);
 
                             let leftDesc = left - 162; // 162 = the right panel width
                             $(".device-resolution").css("left", leftDesc);
-                            $('.dim-indicator').html('Screen size  ' + width + 'px');
+                            $('.dim-indicator').html('Screen size  ' + Math.round(width) + 'px');
                             $('.dim-indicator').css('display', 'block');
                         }
                         // After dragging we need to refresh the editor to re-calculate the highlight border in the element selected.
