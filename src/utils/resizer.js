@@ -31,6 +31,12 @@ export default (editor, opts = {}) => {
 
     editor.on('run:preview', () => $('.iframe-handle-container').css('display', 'none'));
     editor.on('stop:preview', () => $('.iframe-handle-container').css('display', 'block'));
+    editor.Canvas.model.on('change:zoom', () => {
+        if (opts.hideOnZoom) {
+            if (editor.Canvas.getZoom() === 100) $('.iframe-handle-container').css('display', 'block');
+            else $('.iframe-handle-container').css('display', 'none');
+        }
+    });
 
     /**
      * This function will receive a screen type and it will prompt the description on the left side of the canvas.
