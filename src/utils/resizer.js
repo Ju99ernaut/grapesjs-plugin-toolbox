@@ -74,6 +74,8 @@ export default (editor, opts = {}) => {
 
             draggable($(".right-handle").get(0), {
                 axis: "x",
+                max: maxDeviceSize,
+                min: opts.minScreenSize,
                 start() {
                     widthIframe = editor.Canvas.getFrameEl().offsetWidth;
                 },
@@ -88,9 +90,11 @@ export default (editor, opts = {}) => {
                         const total = uleft - editor.Canvas.getOffset().left - widthIframe;
                         let width = widthIframe + total * opts.dragDampen;
                         let left = editor.Canvas.getOffset().left;
+                        let res = true;
 
                         if (width > maxDeviceSize || width < opts.minScreenSize) {
                             uleft = maxLeftPos;
+                            res = false;
                         } else {
                             // Set the iframe width
                             maxLeftPos = uleft;
@@ -106,9 +110,10 @@ export default (editor, opts = {}) => {
                         }
                         // After dragging we need to refresh the editor to re-calculate the highlight border in the element selected.
                         editor.refresh();
-
+                        return res
                     } catch (err) {
                         console.error(err);
+                        return false;
                     }
                 },
                 stop() {
@@ -198,16 +203,13 @@ const draggable = (element, opts = {}) => {
         pos2 = pos4 - e.clientY;
         pos3 = e.clientX;
         pos4 = e.clientY;
-        if (opts.axis === 'x') {
+        if (opts.axis === 'x' || opts.axis === 'xy') {
             element.style.left = (element.offsetLeft - pos1) + 'px';
-            opts.drag(element.offsetLeft);
-        } else if (opts.axis === 'y') {
+            !opts.drag(element.offsetLeft) && (element.style.left = (element.offsetLeft + pos1) + 'px');
+        }
+        if (opts.axis === 'y' || opts.axis === 'xy') {
             element.style.top = (element.offsetTop - pos2) + 'px';
-            opts.drag(element.offsetTop);
-        } else {
-            element.style.left = (element.offsetLeft - pos1) + 'px';
-            element.style.top = (element.offsetTop - pos2) + 'px';
-            opts.drag(element.offsetLeft, element.offsetTop);
+            !opts.drag(element.offsetTop) && (element.style.top = (element.offsetTop + pos2) + 'px');
         }
     }
 
