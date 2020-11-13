@@ -344,9 +344,8 @@ export default (editor, opts = {}) => {
         }
       });
       pn.removeButton('views', 'open-tm');
+      $(`.${pfx}pn-views .${pfx}pn-btn`).css('width', `${100 / pn.getPanel('views').buttons.length}%`);
     }
-
-    $(`.${pfx}pn-views .${pfx}pn-btn`).css('width', `${100 / pn.getPanel('views').buttons.length}%`);
 
     // Body icon
     const openLm = pn.getButton('views', 'open-layers');
