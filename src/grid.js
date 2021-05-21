@@ -1,22 +1,15 @@
 // Based on https://github.com/sdras/cssgridgenerator
 
 export default (editor, opts = {}) => {
-    const {
-        $
-    } = editor;
+    const { $ } = editor;
     const pfx = editor.Config.stylePrefix;
 
     return {
         gridEl(store) {
-            const {
-                width,
-                height,
-                top
-            } = this.dimensions();
-            const el = $(`<div id="${pfx}grid-main" style="display:${this.visible ? 'block': 'none'};width:${width-6}px;height:${height-6}px">
+            const { width, height, top } = this.dimensions();
+            const el = $(`<div id="${pfx}grid-main" style="display:${this.visible ? 'block' : 'none'};width:${width - 6}px;height:${height - 6}px">
                 <div id="${pfx}gridcontainer">
                 </div>
-                <!--gridcontainer-->
             </div>`);
             const gridcontainer = el.find(`#${pfx}gridcontainer`);
             el.prepend(this.gridColUnits(store, width, height, top));
@@ -27,7 +20,7 @@ export default (editor, opts = {}) => {
         },
         gridColUnits(store, width, height, top) {
             const colunits = $(`<section
-                style="width:${width-6}px;top:${top < 40 ? height : -40}px;grid-template-columns:${store.getters.colTemplate(store.state)};grid-template-rows:50px;
+                style="width:${width - 6}px;top:${top < 40 ? height : -40}px;grid-template-columns:${store.getters.colTemplate(store.state)};grid-template-rows:50px;
                 grid-column-gap:${store.state.columngap + 'px'};grid-row-gap:${store.state.rowgap + 'px'}"
                 class="${pfx}colunits"
                 >
@@ -50,7 +43,7 @@ export default (editor, opts = {}) => {
         gridRowUnits(store) {
             const rowunits = $(`<section
                 style="grid-template-columns:50px;grid-template-rows:${store.getters.rowTemplate(store.state)};
-                    grid-column-gap:${store.state.columngap + 'px'};grid-row-gap:${store.state.rowgap + 'px' }"
+                    grid-column-gap:${store.state.columngap + 'px'};grid-row-gap:${store.state.rowgap + 'px'}"
                 class="${pfx}rowunits"
                 >
                     ${store.state.rowArr.map((row, i) => `<div data-key="${i}">
@@ -73,7 +66,7 @@ export default (editor, opts = {}) => {
             const gridsection = $(`<section
                 class="${pfx}grid ${pfx}gridcanvas"
                 style="grid-template-columns:${store.getters.colTemplate(store.state)};grid-template-rows:${store.getters.rowTemplate(store.state)};
-                    grid-column-gap:${store.state.columngap + 'px'};grid-row-gap:${store.state.rowgap + 'px' }"
+                    grid-column-gap:${store.state.columngap + 'px'};grid-row-gap:${store.state.rowgap + 'px'}"
                 >
                 ${Array(store.getters.divNum(store.state)).fill().map((item, i) => `<div
                     data-key="${i}"
@@ -99,7 +92,7 @@ export default (editor, opts = {}) => {
             const gridchild = $(`<section
                 class="${pfx}grid ${pfx}gridchild"
                 style="grid-template-columns:${store.getters.colTemplate(store.state)};grid-template-rows:${store.getters.rowTemplate(store.state)}; 
-                    grid-column-gap:${store.state.columngap + 'px'};grid-row-gap:${store.state.rowgap + 'px' }"
+                    grid-column-gap:${store.state.columngap + 'px'};grid-row-gap:${store.state.rowgap + 'px'}"
                 >
                 ${store.state.childarea.map((child, i) => `<div
                     class="child${i}"
@@ -138,11 +131,7 @@ export default (editor, opts = {}) => {
             $(`.${pfx}rowunits`).replaceWith(this.gridRowUnits(store));
         },
         updateCols(store) {
-            const {
-                width,
-                height,
-                top
-            } = this.dimensions();
+            const { width, height, top } = this.dimensions();
             $(`.${pfx}colunits`).replaceWith(this.gridRowUnits(store, width, height, top));
         },
         updateCanvas(store) {
@@ -154,10 +143,7 @@ export default (editor, opts = {}) => {
         child: {},
         widthfull: `${pfx}widthfull`,
         widthhalf: `${pfx}widthhalf`,
-        errors: {
-            col: [],
-            row: []
-        },
+        errors: { col: [], row: [] },
         visible: false,
         dimensions() {
             return (this.selected && editor.Canvas.getElementPos(this.selected.getEl())) || {
@@ -226,11 +212,11 @@ export default (editor, opts = {}) => {
             if (startend === "e") {
                 // flip starts and ends if dragged in the opposite direction
                 let [startRow, endRow] =
-                this.child.srow <= this.child.erow ? [this.child.srow, this.child.erow] : [this.child.erow, this.child.srow];
+                    this.child.srow <= this.child.erow ? [this.child.srow, this.child.erow] : [this.child.erow, this.child.srow];
                 let [startCol, endCol] =
-                this.child.scol <= this.child.ecol ? [this.child.scol, this.child.ecol] : [this.child.ecol, this.child.scol];
+                    this.child.scol <= this.child.ecol ? [this.child.scol, this.child.ecol] : [this.child.ecol, this.child.scol];
                 let childstring = `${startRow} / ${startCol} / ${endRow +
-                1} / ${endCol + 1}`;
+                    1} / ${endCol + 1}`;
                 store.mutations.addChildren(store.state, childstring);
             }
             this.updateChildren(store);

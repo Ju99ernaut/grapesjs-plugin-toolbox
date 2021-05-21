@@ -1,7 +1,4 @@
-import {
-    groupRepeatedUnits,
-    createRepetition
-} from '../utils/repetition';
+import { groupRepeatedUnits, createRepetition } from '../utils/repetition';
 
 export default (editor, opts = {}) => {
     return {
@@ -32,16 +29,16 @@ export default (editor, opts = {}) => {
         mutations: {
             initialArrIndex(state, payload) {
                 if (payload !== '') {
-                    const queryParams = new URLSearchParams(payload)
+                    const queryParams = new URLSearchParams(payload);
 
                     for (const stateKey in state) {
-                        const paramIsValid = queryParams.has(stateKey)
-                        const paramType = typeof (state[stateKey])
+                        const paramIsValid = queryParams.has(stateKey);
+                        const paramType = typeof (state[stateKey]);
 
                         if (paramIsValid && paramType === 'number') {
                             state[stateKey] = queryParams.get(stateKey);
                         } else if (paramIsValid && paramType === 'object') {
-                            state[stateKey] = JSON.parse(queryParams.get(stateKey))
+                            state[stateKey] = JSON.parse(queryParams.get(stateKey));
                         }
                     }
                 } else {
@@ -62,9 +59,7 @@ export default (editor, opts = {}) => {
                 } else {
                     let difference = newVal - oldVal;
                     for (let i = 1; i <= difference; i++) {
-                        state[payload.direction].push({
-                            unit: "1fr"
-                        });
+                        state[payload.direction].push({ unit: "1fr" });
                     }
                 }
             },
@@ -102,8 +97,6 @@ export default (editor, opts = {}) => {
 //we start off with just a few rows and columns filled with 1fr units
 const createArr = (direction, arr) => {
     for (let i = 1; i <= direction; i++) {
-        arr.push({
-            unit: "1fr"
-        });
+        arr.push({ unit: "1fr" });
     }
 };

@@ -2,13 +2,7 @@ import ColorThief from '../../node_modules/colorthief/dist/color-thief.mjs';
 
 export default (editor, opts = {}) => {
     const colorthief = new ColorThief();
-    const {
-        commandId,
-        labelColors,
-        labelApply,
-        paletteIcon,
-        onAdd
-    } = opts;
+    const { commandId, labelColors, labelApply, paletteIcon, onAdd } = opts;
     const $ = editor.$;
     const pfx = editor.Config.stylePrefix;
 
@@ -23,10 +17,7 @@ export default (editor, opts = {}) => {
                 const tbExists = tb.some(item => item.command === commandId);
 
                 if (!tbExists) {
-                    tb.unshift({
-                        command: commandId,
-                        label: paletteIcon,
-                    });
+                    tb.unshift({ command: commandId, label: paletteIcon });
                     this.set('toolbar', tb);
                 }
             }
@@ -36,9 +27,7 @@ export default (editor, opts = {}) => {
     // Add the palette add command
     editor.Commands.add(commandId, {
         run(ed, s, options = {}) {
-            const {
-                id
-            } = this;
+            const { id } = this;
 
             this.editor = ed;
             this.target = options.target || ed.getSelected();
@@ -49,10 +38,7 @@ export default (editor, opts = {}) => {
             const content = this.createContent(this.color, this.palette);
             const title = labelColors;
             const btn = content.children[1];
-            ed.Modal.open({
-                    title,
-                    content
-                })
+            ed.Modal.open({ title, content })
                 .getModel().once('change:open', () => ed.stopCommand(id));
             btn.onclick = () => this.addPalette();
             opts.addPalette(btn);
@@ -105,10 +91,7 @@ export default (editor, opts = {}) => {
         },
 
         addPalette() {
-            const {
-                target,
-                editor
-            } = this;
+            const { target, editor } = this;
             const sm = editor.StyleManager;
 
             !editor.Config.colorPicker && (editor.Config.colorPicker = {
@@ -136,9 +119,7 @@ export default (editor, opts = {}) => {
             const coll = sm.getProperties(input.sector).models;
             const at = coll.indexOf(sm.getProperty(input.sector, input.property));
             sm.removeProperty(input.sector, input.property)
-            sm.addProperty(input.sector, input, {
-                at
-            });
+            sm.addProperty(input.sector, input, { at });
         },
 
         /**
@@ -149,12 +130,8 @@ export default (editor, opts = {}) => {
          */
         getDominantColor(img) {
             colorthief.getColor(img)
-                .then(color => {
-                    return color;
-                })
-                .catch(err => {
-                    console.log(err)
-                });
+                .then(color => color)
+                .catch(err => console.log(err));
         },
 
         /**
@@ -165,12 +142,8 @@ export default (editor, opts = {}) => {
          */
         getPaletteArray(img) {
             colorthief.getPalette(img, 9)
-                .then(palette => {
-                    return palette;
-                })
-                .catch(err => {
-                    console.log(err)
-                });
+                .then(palette => palette)
+                .catch(err => console.log(err));
         },
 
         /**

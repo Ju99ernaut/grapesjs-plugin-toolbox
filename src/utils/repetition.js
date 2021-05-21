@@ -1,10 +1,6 @@
-export const groupRepeatedUnits = (templateUnitArray = [{
-    unit: "1fr"
-}]) => {
+export const groupRepeatedUnits = (templateUnitArray = [{ unit: "1fr" }]) => {
     const templateArray = templateUnitArray.map(i => i["unit"]);
-    const groups = [
-        [templateArray.shift()]
-    ];
+    const groups = [[templateArray.shift()]];
     for (const templateUnit of templateArray) {
         const lastGroup = groups[groups.length - 1];
         if (lastGroup.indexOf(templateUnit) !== -1) {

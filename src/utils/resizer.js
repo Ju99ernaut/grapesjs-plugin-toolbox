@@ -1,7 +1,7 @@
 // Adated from https://github.com/artf/grapesjs/issues/1368
 
 export default (editor, opts = {}) => {
-    const $ = editor.$;
+    const { $ } = editor;
     const deviceManager = editor.Devices;
     const hints = $(`
     <div class="iframe-handle-container hidden">
@@ -13,7 +13,7 @@ export default (editor, opts = {}) => {
         <div class="handle left-handle"></div>
     </div>`);
 
-    editor.Commands.add('smoothresize', () => {});
+    editor.Commands.add('smoothresize', () => { });
 
     editor.on('change:device', () => {
         const frame = $('.gjs-frame');
@@ -172,10 +172,7 @@ export default (editor, opts = {}) => {
             glutterHandleObj.removeClass("hidden");
         }
 
-        return {
-            width: width,
-            height: height
-        };
+        return { width, height };
     };
 }
 

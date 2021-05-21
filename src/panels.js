@@ -1,6 +1,4 @@
-import {
-    cmdSave
-} from './consts';
+import { cmdSave } from './consts';
 
 export default (editor, config) => {
     const cm = editor.Commands;
@@ -9,32 +7,24 @@ export default (editor, config) => {
     const pfx = editor.Config.stylePrefix;
 
     cm.add(cmdSave, e => {
-        editor.store(res => {
-            console.log("Saved...")
-        });
+        editor.store(res => console.log("Saved..."));
     });
 
     const pnOptions = pn.getPanel('options');
     pnOptions.get('buttons').add([{
         id: 'undo',
         className: 'fa fa-undo', //reply
-        attributes: {
-            title: 'undo',
-        },
+        attributes: { title: 'undo' },
         command: e => e.runCommand('core:undo'),
     }, {
         id: 'redo',
         className: 'fa fa-repeat', //share
-        attributes: {
-            title: 'redo',
-        },
+        attributes: { title: 'redo' },
         command: e => e.runCommand('core:redo'),
     }, {
         id: cmdSave,
         className: 'fa fa-floppy-o',
-        attributes: {
-            title: 'save',
-        },
+        attributes: { title: 'save' },
         command: e => e.runCommand(cmdSave),
     }]);
 
