@@ -1,10 +1,5 @@
-import {
-  gridCompId,
-  gridChildId
-} from './consts';
-import {
-  store
-} from './utils';
+import { gridCompId, gridChildId } from './consts';
+import { store } from './utils';
 
 export default (editor, opts = {}) => {
   const domc = editor.DomComponents;
@@ -17,22 +12,16 @@ export default (editor, opts = {}) => {
     cellItemClass
   } = opts;
 
-  const idTrait = {
-    name: 'id',
-    label: 'Id'
-  }
+  const idTrait = { name: 'id', label: 'Id' };
 
-  const titleTrait = {
-    name: 'title',
-    label: 'Title'
-  }
+  const titleTrait = { name: 'title', label: 'Title' };
 
   const privateCls = [`.${gridClass}`, `.${cellItemClass}`, `.${gridCellClass}`];
   editor.on(
     'selector:add',
     selector =>
-    privateCls.indexOf(selector.getFullName()) >= 0 &&
-    selector.set('private', 1)
+      privateCls.indexOf(selector.getFullName()) >= 0 &&
+      selector.set('private', 1)
   );
 
   const addCellTrait = {
@@ -44,19 +33,19 @@ export default (editor, opts = {}) => {
       const comp = editor.getSelected();
       comp && comp.components().add(`<div data-${pfx}name="cell-item" class="${cellItemClass}" 
         data-${pfx}resizable='${JSON.stringify({
-          tl: 0,
-          tc: 0,
-          tr: 0,
-          cl: 0,
-          cr: 1,
-          bl: 0,
-          br: 0,
-          bc: 0,
-          keyWidth: 'flex-basis',
-          minDim: 1,
-          step: 0.2,
-          currentUnit: 1
-        })}'></div>`);
+        tl: 0,
+        tc: 0,
+        tr: 0,
+        cl: 0,
+        cr: 1,
+        bl: 0,
+        br: 0,
+        bc: 0,
+        keyWidth: 'flex-basis',
+        minDim: 1,
+        step: 0.2,
+        currentUnit: 1
+      })}'></div>`);
       const cc = editor.Css;
       cc.getRule(`.${cellItemClass}`) || cc.setRule(`.${cellItemClass}`, {
         'min-height': '75px',
@@ -163,22 +152,18 @@ export default (editor, opts = {}) => {
     command: editor => {
       //Generate html and css
       const sel = editor.getSelected();
-      const {
-        state,
-        getters
-      } = sel.get('store');
+      const { state, getters } = sel.get('store');
       let grid = state.auto ? Array(state.rows * state.columns).fill().map(i => {
-          return `<div data-${pfx}type="${gridChildId}"></div>`
-        }).join("") :
+        return `<div data-${pfx}type="${gridChildId}"></div>`
+      }).join("") :
         state.childarea.map((area, i) => {
-          return `<div data-${pfx}type="${gridChildId}" class="${sel.getId() + '-div' + i}"></div>
-            <style>.${sel.getId() + '-div' + i}{grid-area:${area}}</style>`
+          return `<div data-${pfx}type="${gridChildId}" class="${sel.getId() + '-div' + i}"></div>`
         }).join("");
       const css = state.childarea.map((area, i) => {
         return `.${sel.getId() + '-div' + i}{grid-area:${area}}`
       }).join("");
-      sel.components().length > 0 ? sel.components().add(`<style>${generateMedia(css)}</style>`) :
-        sel.components().reset(grid);
+      !sel.components().length > 0 && sel.components().reset(grid);
+      editor.addComponents(`<style>${generateMedia(css)}</style>`);
       (editor.Grid.visible = false) || (editor.Grid.getEl().style.display = 'none');
       sel.addStyle({
         'grid-template-columns': getters.colTemplate(state)
@@ -188,24 +173,19 @@ export default (editor, opts = {}) => {
 
   const generateMedia = (css) => {
     const device = editor.Devices.get(editor.getDevice());
-    if (device !== '' || device !== 'Desktop') {
+    if (device && (device !== '' || device !== 'Desktop')) {
       return `@media (max-width: ${device.get('widthMedia')}){
         ${css}
       }`
-    } else {
-      return css
     }
+    return css;
   }
 
   domc.addType(gridChildId, {
     model: {
       defaults: {
         icon: '<i class="fa fa-square-o"></i>',
-        traits: [
-          idTrait,
-          titleTrait,
-          addCellTrait,
-        ],
+        traits: [idTrait, titleTrait, addCellTrait],
       },
       init() {
         const cc = editor.Css;
@@ -222,9 +202,7 @@ export default (editor, opts = {}) => {
   });
 
   const toolbar = [{
-    attributes: {
-      class: 'fa fa-table'
-    },
+    attributes: { class: 'fa fa-table' },
     command: e => {
       if (!e.getSelected().get('auto')) {
         e.Grid.visible = !e.Grid.visible;
@@ -232,12 +210,8 @@ export default (editor, opts = {}) => {
       }
     }
   }, {
-    attributes: {
-      class: 'fa fa-arrow-up'
-    },
-    command: e => e.runCommand('core:component-exit', {
-      force: 1
-    })
+    attributes: { class: 'fa fa-arrow-up' },
+    command: e => e.runCommand('core:component-exit', { force: 1 })
   }, {
     attributes: {
       class: 'fa fa-arrows gjs-no-touch-actions',
@@ -245,14 +219,10 @@ export default (editor, opts = {}) => {
     },
     command: 'tlb-move'
   }, {
-    attributes: {
-      class: 'fa fa-clone'
-    },
+    attributes: { class: 'fa fa-clone' },
     command: 'tlb-clone'
   }, {
-    attributes: {
-      class: 'fa fa-trash-o'
-    },
+    attributes: { class: 'fa fa-trash-o' },
     command: 'tlb-delete'
   }]
 
@@ -354,18 +324,14 @@ export default (editor, opts = {}) => {
         const store = this.get('store');
         store.mutations.updateRowGap(store.state, parseInt(rowgap));
         editor.Grid.updateChildren(store);
-        this.addStyle({
-          'grid-row-gap': `${rowgap}px`
-        });
+        this.addStyle({ 'grid-row-gap': `${rowgap}px` });
       },
       updateColumngap() {
         const columngap = this.get('columngap');
         const store = this.get('store');
         store.mutations.updateColumnGap(store.state, parseInt(columngap));
         editor.Grid.updateChildren(store);
-        this.addStyle({
-          'grid-column-gap': `${columngap}px`
-        });
+        this.addStyle({ 'grid-column-gap': `${columngap}px` });
       },
       updateMin() {
         const min = parseInt(this.get('min'));
@@ -376,12 +342,12 @@ export default (editor, opts = {}) => {
         const auto = !!this.get('auto');
         const store = this.get('store');
         store.mutations.updateAuto(store.state, auto);
-        if (auto)(editor.Grid.visible = false) || (editor.Grid.getEl().style.display = 'none');
+        if (auto) (editor.Grid.visible = false) || (editor.Grid.getEl().style.display = 'none');
       },
       onStatusChange() {
         const status = this.get('status');
         if (status === 'selected') editor.Grid.select(editor.getSelected());
-        else(editor.Grid.visible = false) || (editor.Grid.getEl().style.display = 'none');
+        else (editor.Grid.visible = false) || (editor.Grid.getEl().style.display = 'none');
       },
       ...gridComponent
     }
