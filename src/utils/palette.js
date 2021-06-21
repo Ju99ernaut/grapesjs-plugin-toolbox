@@ -2,7 +2,7 @@ import ColorThief from '../../node_modules/colorthief/dist/color-thief.mjs';
 
 export default (editor, opts = {}) => {
     const colorthief = new ColorThief();
-    const { commandId, labelColors, labelApply, paletteIcon, onAdd } = opts;
+    const { colorsNum, commandId, labelColors, labelApply, paletteIcon, onAdd } = opts;
     const $ = editor.$;
     const pfx = editor.Config.stylePrefix;
 
@@ -31,10 +31,10 @@ export default (editor, opts = {}) => {
 
             this.editor = ed;
             this.target = options.target || ed.getSelected();
-            const colorArr = colorthief.getColor(this.target.getEl());
-            this.color = colorArr ? `rgb(${colorArr[0]},${colorArr[1]},${colorArr[2]})` : 'rgba(0,0,0)';
-            const paletteArr = colorthief.getPalette(this.target.getEl(), 9);
-            this.palette = paletteArr ? this.generateColorsFromArray(paletteArr) : ['rgba(0,0,0)'];
+            const colorArr = this.getDominantColor(this.target.getEl());
+            this.color = `rgb(${colorArr[0]},${colorArr[1]},${colorArr[2]})`;
+            const paletteArr = this.getPaletteArray(this.target.getEl());
+            this.palette = this.generateColorsFromArray(paletteArr);
             const content = this.createContent(this.color, this.palette);
             const title = labelColors;
             const btn = content.children[1];
@@ -129,9 +129,9 @@ export default (editor, opts = {}) => {
          * @private
          */
         getDominantColor(img) {
-            colorthief.getColor(img)
+            return colorthief.getColor(img)
                 .then(color => color)
-                .catch(err => console.log(err));
+                .catch(err => [0, 0, 0]);
         },
 
         /**
@@ -141,9 +141,9 @@ export default (editor, opts = {}) => {
          * @private
          */
         getPaletteArray(img) {
-            colorthief.getPalette(img, 9)
+            return colorthief.getPalette(img, colorsNum)
                 .then(palette => palette)
-                .catch(err => console.log(err));
+                .catch(err => [[0, 0, 0]]);
         },
 
         /**
@@ -157,6 +157,5 @@ export default (editor, opts = {}) => {
             arr.forEach(col => cols.push(`rgb(${col[0]},${col[1]},${col[2]})`));
             return cols;
         }
-        //return/set color palette
     });
 }
