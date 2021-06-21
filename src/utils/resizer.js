@@ -3,8 +3,7 @@
 export default (editor, opts = {}) => {
     const { $ } = editor;
     const deviceManager = editor.Devices;
-    const hints = $(`
-    <div class="iframe-handle-container hidden">
+    const hints = $(`<div class="iframe-handle-container hidden">
         <div class="handle right-handle">
             <div class="gutter-handle"></div>
             <div class="tab-handle"></div>
@@ -21,22 +20,24 @@ export default (editor, opts = {}) => {
             'width': '',
             'transition': 'width 0.35s ease,height 0.35s ease'
         });
-        $('.dim-indicator').css('display', 'none');
+        hints.find('.dim-indicator').css('display', 'none');
+        hints.css('display', 'none');
         setTimeout(() => {
             const device = deviceManager.get(editor.getDevice());
             showDeviceResolution(device);
             initDeviceEventHandle(device);
             getWindowDims();
+            hints.css('display', 'block')
             frame.css('transition', 'none');
-        }, 600);
+        }, 800);
     });
 
-    editor.on('run:preview', () => $('.iframe-handle-container').css('display', 'none'));
-    editor.on('stop:preview', () => $('.iframe-handle-container').css('display', 'block'));
+    editor.on('run:preview', () => hints.css('display', 'none'));
+    editor.on('stop:preview', () => hints.css('display', 'block'));
     editor.Canvas.model.on('change:zoom', () => {
         if (opts.hideOnZoom) {
-            if (editor.Canvas.getZoom() === 100) $('.iframe-handle-container').css('display', 'block');
-            else $('.iframe-handle-container').css('display', 'none');
+            if (editor.Canvas.getZoom() === 100) hints.css('display', 'block');
+            else hints.css('display', 'none');
         }
     });
 
@@ -46,14 +47,14 @@ export default (editor, opts = {}) => {
      * @param device
      */
     const showDeviceResolution = (device) => {
-        const glutterResize = $(document).find(".gjs-cv-canvas").find(".iframe-handle-container");
+        const glutterResize = hints;
 
         if (glutterResize.length > 0) {
-            glutterResize.addClass("hidden");
+            glutterResize.addClass('hidden');
         } else {
             // If the div is not created yet inside the iframe then we include it.
-            const copyGlutterResize = $(document).find(".iframe-handle-container").clone(true, true);
-            $(".gjs-frame").before(copyGlutterResize);
+            const copyGlutterResize = hints.clone(true, true);
+            $('.gjs-frame').before(copyGlutterResize);
         }
         // We force to refresh the screen because then we will update all dimensions
         setTimeout(function () {
@@ -74,7 +75,7 @@ export default (editor, opts = {}) => {
             let widthIframe = 0; // Current iframe Width
             let maxLeftPos = 0;
 
-            draggable($(".right-handle").get(0), {
+            draggable(hints.find('.right-handle').get(0), {
                 axis: "x",
                 max: maxDeviceSize,
                 min: opts.minScreenSize,
@@ -83,7 +84,7 @@ export default (editor, opts = {}) => {
                 },
                 drag(uleft) {
                     try {
-                        if ($(".gjs-cv-canvas").find(".handle-mask").length == 0) {
+                        if ($(".gjs-cv-canvas").find(".handle-mask").length === 0) {
                             // We need to create a mask to avoid in the moment that we are dragging to move the pointer over the iframe and losing then the control of the resizing.
                             $(".gjs-cv-canvas").append('<div class="handle-mask" style="position: absolute; z-index: 2; left: 0; top: 0; right: 0; bottom: 0;"></div>');
                         }
@@ -103,12 +104,12 @@ export default (editor, opts = {}) => {
                             $('.gjs-frame').css('width', width);
 
                             // Set the position left of the left handle
-                            $(".left-handle").css("left", left);
+                            hints.find('.left-handle').css('left', left);
 
                             let leftDesc = left - 162; // 162 = the right panel width
-                            $(".device-resolution").css("left", leftDesc);
-                            $('.dim-indicator').html('Screen size  ' + Math.round(width) + 'px');
-                            $('.dim-indicator').css('display', 'block');
+                            hints.find('.device-resolution').css('left', leftDesc);
+                            hints.find('.dim-indicator').html('Screen size  ' + Math.round(width) + 'px');
+                            hints.find('.dim-indicator').css('display', 'block');
                         }
                         // After dragging we need to refresh the editor to re-calculate the highlight border in the element selected.
                         editor.refresh();
@@ -158,18 +159,18 @@ export default (editor, opts = {}) => {
 
         // IMPORTANT!!!!
         // Glutter Handle information
-        const glutterHandleObj = $(document).find(".gjs-cv-canvas").find(".iframe-handle-container");
+        const glutterHandleObj = hints;
         if (glutterHandleObj.length > 0) {
 
-            const leftGlutterHandleBar = glutterHandleObj.find(".left-handle");
+            const leftGlutterHandleBar = glutterHandleObj.find('.left-handle');
             const rightGlutterHandleBar = glutterHandleObj.find(".right-handle");
 
             const leftOffset = editor.Canvas.getOffset().left;
             const rightOffset = editor.Canvas.getOffset().left + editor.Canvas.getFrameEl().offsetWidth;
 
-            leftGlutterHandleBar.css("cssText", "left: " + leftOffset + "px !important");
-            rightGlutterHandleBar.css("cssText", "left: " + rightOffset + "px !important");
-            glutterHandleObj.removeClass("hidden");
+            leftGlutterHandleBar.css('cssText', 'left: ' + leftOffset + 'px !important');
+            rightGlutterHandleBar.css('cssText', 'left: ' + rightOffset + 'px !important');
+            glutterHandleObj.removeClass('hidden');
         }
 
         return { width, height };
