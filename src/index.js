@@ -45,6 +45,8 @@ export default (editor, opts = {}) => {
       // The add button (HTMLElement) will be passed as an argument to this function, once created.
       // This will allow you a higher customization.
       addPalette: () => { },
+      // Number of colors to generate for pallete
+      colorsNum: 9,
       // Refresh inputs on palette update
       refreshPalette: [{
         sector: 'typography',
