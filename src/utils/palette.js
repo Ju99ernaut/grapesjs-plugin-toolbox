@@ -129,9 +129,11 @@ export default (editor, opts = {}) => {
          * @private
          */
         getDominantColor(img) {
-            return colorthief.getColor(img)
-                .then(color => color)
-                .catch(err => [0, 0, 0]);
+            try {
+                return colorthief.getColor(img);
+            } catch {
+                return [255, 255, 255];
+            }
         },
 
         /**
@@ -141,9 +143,11 @@ export default (editor, opts = {}) => {
          * @private
          */
         getPaletteArray(img) {
-            return colorthief.getPalette(img, colorsNum)
-                .then(palette => palette)
-                .catch(err => [[0, 0, 0]]);
+            try {
+                return colorthief.getPalette(img, colorsNum);
+            } catch {
+                return [[0, 0, 0], [255, 255, 255]];
+            }
         },
 
         /**
@@ -153,6 +157,7 @@ export default (editor, opts = {}) => {
          * @private
          */
         generateColorsFromArray(arr) {
+            arr = arr || [[0, 0, 0], [255, 255, 255]];
             const cols = [];
             arr.forEach(col => cols.push(`rgb(${col[0]},${col[1]},${col[2]})`));
             return cols;
