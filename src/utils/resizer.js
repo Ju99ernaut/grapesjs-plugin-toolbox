@@ -1,6 +1,8 @@
 // Adated from https://github.com/artf/grapesjs/issues/1368
 
 export default (editor, opts = {}) => {
+    let frame;
+    let canvas;
     const { $ } = editor;
     const deviceManager = editor.Devices;
     const hints = $(`<div class="iframe-handle-container hidden">
@@ -15,7 +17,7 @@ export default (editor, opts = {}) => {
     editor.Commands.add('smoothresize', () => { });
 
     editor.on('change:device', () => {
-        const frame = $('.gjs-frame');
+        if (!frame) frame = $('.gjs-frame');
         frame.css({
             'width': '',
             'transition': 'width 0.35s ease,height 0.35s ease'
@@ -53,8 +55,9 @@ export default (editor, opts = {}) => {
             glutterResize.addClass('hidden');
         } else {
             // If the div is not created yet inside the iframe then we include it.
+            if (!frame) frame = $('.gjs-frame');
             const copyGlutterResize = hints.clone(true, true);
-            $('.gjs-frame').before(copyGlutterResize);
+            frame.before(copyGlutterResize);
         }
         // We force to refresh the screen because then we will update all dimensions
         setTimeout(function () {
@@ -76,7 +79,7 @@ export default (editor, opts = {}) => {
             let maxLeftPos = 0;
 
             draggable(hints.find('.right-handle').get(0), {
-                axis: "x",
+                axis: 'x',
                 max: maxDeviceSize,
                 min: opts.minScreenSize,
                 start() {
@@ -84,9 +87,10 @@ export default (editor, opts = {}) => {
                 },
                 drag(uleft) {
                     try {
-                        if ($(".gjs-cv-canvas").find(".handle-mask").length === 0) {
+                        if (!canvas) canvas = $('.gjs-cv-canvas');
+                        if (canvas.find('.handle-mask').length === 0) {
                             // We need to create a mask to avoid in the moment that we are dragging to move the pointer over the iframe and losing then the control of the resizing.
-                            $(".gjs-cv-canvas").append('<div class="handle-mask" style="position: absolute; z-index: 2; left: 0; top: 0; right: 0; bottom: 0;"></div>');
+                            canvas.append('<div class="handle-mask" style="position: absolute; z-index: 2; left: 0; top: 0; right: 0; bottom: 0;"></div>');
                         }
 
                         // We need to change the iframe width dynamically
@@ -101,7 +105,8 @@ export default (editor, opts = {}) => {
                         } else {
                             // Set the iframe width
                             maxLeftPos = uleft;
-                            $('.gjs-frame').css('width', width);
+                            if (!frame) frame = $('.gjs-frame');
+                            frame.css('width', width);
 
                             // Set the position left of the left handle
                             hints.find('.left-handle').css('left', left);
@@ -121,7 +126,7 @@ export default (editor, opts = {}) => {
                 },
                 stop() {
                     try {
-                        $(".handle-mask").remove();
+                        $('.handle-mask').remove();
                         editor.runCommand('smoothresize');
                     } catch (err) {
                         console.error(err);
@@ -163,7 +168,7 @@ export default (editor, opts = {}) => {
         if (glutterHandleObj.length > 0) {
 
             const leftGlutterHandleBar = glutterHandleObj.find('.left-handle');
-            const rightGlutterHandleBar = glutterHandleObj.find(".right-handle");
+            const rightGlutterHandleBar = glutterHandleObj.find('.right-handle');
 
             const leftOffset = editor.Canvas.getOffset().left;
             const rightOffset = editor.Canvas.getOffset().left + editor.Canvas.getFrameEl().offsetWidth;
@@ -186,9 +191,7 @@ const draggable = (element, opts = {}) => {
         falseCountX = 0,
         falseCountY = 0;
 
-    element.addEventListener('mousedown', e => dragMouseDown(e));
-
-    const dragMouseDown = (e) => {
+    element.addEventListener('mousedown', e => {
         e = e || window.event;
         e.preventDefault();
 
@@ -197,7 +200,7 @@ const draggable = (element, opts = {}) => {
         document.onmouseup = closeDragElement;
         document.onmousemove = elementDrag;
         opts.start();
-    }
+    });
 
     const elementDrag = (e) => {
         e = e || window.event;
