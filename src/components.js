@@ -174,7 +174,7 @@ export default (editor, opts = {}) => {
   const generateMedia = (css) => {
     const deviceId = editor.getDevice();
     const device = editor.Devices.get(deviceId);
-    if (deviceId && deviceId !== 'Desktop') {
+    if (deviceId.toLowerCase() !== 'desktop') {
       return `@media (max-width: ${device.get('widthMedia')}){
         ${css}
       }`
