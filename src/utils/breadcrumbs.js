@@ -23,5 +23,9 @@ export default (editor, config) => {
         const breadcrumbs = $(`#${pfx}breadcrumbs`);
         !breadcrumbs.length && $('body').append($(`<div id="${pfx}breadcrumbs"></div>`));
         breadcrumbs.html(generateQuerySelector(model.getEl()));
+        breadcrumbs.find('span').on('click', function(e) {
+            const doc = editor.Canvas.getDocument();
+            editor.select(doc.querySelector(e.currentTarget.innerText.trim()));
+        });
     });
 }
