@@ -163,7 +163,7 @@ export default (editor, opts = {}) => {
         return `.${sel.getId() + '-div' + i}{grid-area:${area}}`
       }).join("");
       !sel.components().length > 0 && sel.components().reset(grid);
-      editor.addStyle(`${generateMedia(css)}`);
+      editor.addStyle(generateMedia(css));
       (editor.Grid.visible = false) || (editor.Grid.getEl().style.display = 'none');
       sel.addStyle({
         'grid-template-columns': getters.colTemplate(state)
