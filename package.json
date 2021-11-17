@@ -1,6 +1,6 @@
 {
   "name": "grapesjs-plugin-toolbox",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Grapesjs Plugin Toolbox",
   "main": "dist/grapesjs-plugin-toolbox.min.js",
   "repository": {
