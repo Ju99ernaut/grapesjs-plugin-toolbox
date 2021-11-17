@@ -107,7 +107,7 @@ export default (editor, opts = {}) => {
             return gridchild;
         },
         render(cont, store) {
-            if (!this.el) {
+            if (!this.container?.length) {
                 this.el = this.gridEl(store);
                 this.container = $(cont);
                 this.container.append(this.el);
@@ -116,6 +116,7 @@ export default (editor, opts = {}) => {
                     st && editor.Grid.visible && editor.Grid.update(st);
                 });
             }
+            this.rendered = true;
         },
         getEl() {
             return this.el.get(0);
@@ -145,6 +146,7 @@ export default (editor, opts = {}) => {
         widthhalf: `${pfx}widthhalf`,
         errors: { col: [], row: [] },
         visible: false,
+        rendered: false,
         dimensions() {
             return (this.selected && editor.Canvas.getElementPos(this.selected.getEl())) || {
                 width: 100,

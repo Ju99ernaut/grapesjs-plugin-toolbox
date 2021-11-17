@@ -290,6 +290,8 @@ export default (editor, opts = {}) => {
     ...opts
   };
 
+  // Load grid
+  editor.Grid = grid(editor, options);
   // Add components
   loadComponents(editor, options);
   // Add blocks
@@ -302,8 +304,6 @@ export default (editor, opts = {}) => {
   palette(editor, options);
   // Load resizer
   options.resizer && resizer(editor, options);
-  // Load grid
-  editor.Grid = grid(editor, options);
 
   editor.on('load', () => {
     const $ = editor.$;

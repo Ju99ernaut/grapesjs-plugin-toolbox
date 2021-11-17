@@ -24,6 +24,15 @@ export default (editor, opts = {}) => {
       selector.set('private', 1)
   );
 
+  const showGrid = (ed) => {
+    if (!ed.getSelected().get('auto')) {
+      const st = ed.Grid.selected.get('store');
+      if (!editor.Grid.container?.length) editor.Grid.render(`#${pfx}tools`, st);
+      ed.Grid.visible = !ed.Grid.visible;
+      ed.Grid.update(st);
+    }
+  }
+
   const addCellTrait = {
     name: 'addCell',
     type: 'button',
@@ -113,12 +122,7 @@ export default (editor, opts = {}) => {
     type: 'button',
     full: true,
     text: 'Toggle',
-    command: e => {
-      if (!e.getSelected().get('auto')) {
-        e.Grid.visible = !e.Grid.visible;
-        e.Grid.update(e.Grid.selected.get('store'));
-      }
-    }
+    command: e => showGrid(e)
   }
 
   const clearTrait = {
@@ -182,6 +186,10 @@ export default (editor, opts = {}) => {
     return css;
   }
 
+  const toConfigState = (state) => {
+    return state && Object.keys(state).length ? { state } : undefined;
+  }
+
   domc.addType(gridChildId, {
     model: {
       defaults: {
@@ -204,12 +212,7 @@ export default (editor, opts = {}) => {
 
   const toolbar = [{
     attributes: { class: 'fa fa-table' },
-    command: e => {
-      if (!e.getSelected().get('auto')) {
-        e.Grid.visible = !e.Grid.visible;
-        e.Grid.update(e.Grid.selected.get('store'));
-      }
-    }
+    command: e => showGrid(e)
   }, {
     attributes: { class: 'fa fa-arrow-up' },
     command: e => e.runCommand('core:component-exit', { force: 1 })
@@ -262,8 +265,12 @@ export default (editor, opts = {}) => {
       },
       init() {
         const cc = editor.Css;
-        const st = store(opts);
-        st.mutations.initialArrIndex(st.state, '');
+        const storedState = this.get('store')?.state;
+        const st = {
+          ...store(opts),
+          ...toConfigState(storedState || {})
+        };
+        !storedState && st.mutations.initialArrIndex(st.state, '');
         this.set('rows', st.state.rows);
         this.set('columns', st.state.columns);
         this.set('rowgap', st.state.rowgap);
@@ -280,8 +287,6 @@ export default (editor, opts = {}) => {
           height: '95%',
           width: '100%',
         });
-        if (!editor.Grid.container || !editor.Grid.el) editor.Grid.render(`#${pfx}tools`, st);
-        editor.Grid.update(st);
         this.on("change:auto", this.updateAuto);
         this.on("change:rows", this.updateRows);
         this.on("change:columns", this.updateColumns);
@@ -347,6 +352,7 @@ export default (editor, opts = {}) => {
       },
       onStatusChange() {
         const status = this.get('status');
+        if (!editor.Grid.container?.length) editor.Grid.render(`#${pfx}tools`, this.get('store'));
         if (status === 'selected') editor.Grid.select(editor.getSelected());
         else (editor.Grid.visible = false) || (editor.Grid.getEl().style.display = 'none');
       },
