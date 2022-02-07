@@ -17,7 +17,7 @@ export default (editor, opts = {}) => {
     editor.Commands.add('smoothresize', () => { });
 
     editor.on('change:device', () => {
-        if (!frame) frame = $('.gjs-frame');
+        if (!frame) frame = $('.gjs-frame-wrapper');
         frame.css({
             'width': '',
             'transition': 'width 0.35s ease,height 0.35s ease'
@@ -55,7 +55,7 @@ export default (editor, opts = {}) => {
             glutterResize.addClass('hidden');
         } else {
             // If the div is not created yet inside the iframe then we include it.
-            if (!frame) frame = $('.gjs-frame');
+            if (!frame) frame = $('.gjs-frame-wrapper');
             const copyGlutterResize = hints.clone(true, true);
             frame.before(copyGlutterResize);
         }
@@ -105,7 +105,7 @@ export default (editor, opts = {}) => {
                         } else {
                             // Set the iframe width
                             maxLeftPos = uleft;
-                            if (!frame) frame = $('.gjs-frame');
+                            if (!frame) frame = $('.gjs-frame-wrapper');
                             frame.css('width', width);
 
                             // Set the position left of the left handle

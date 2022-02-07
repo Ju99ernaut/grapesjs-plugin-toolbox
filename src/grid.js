@@ -112,7 +112,7 @@ export default (editor, opts = {}) => {
                 this.container = $(cont);
                 this.container.append(this.el);
                 editor.on('styleManager:change:height run:smoothresize run:resize', () => {
-                    const st = editor.getSelected().get('store');
+                    const st = editor.getSelected()?.get('store');
                     st && editor.Grid.visible && editor.Grid.update(st);
                 });
             }
