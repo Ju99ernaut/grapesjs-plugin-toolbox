@@ -30,87 +30,87 @@ $breadcrumbsHoverColor: #6c8fdb;
     color: #cf9269;
 }
 
-##{$prefix}sm-margin .#{$prefix}sm-properties::after,
-##{$prefix}sm-padding .#{$prefix}sm-properties::after {
+.#{$prefix}sm-property__margin .#{$prefix}sm-properties::after,
+.#{$prefix}sm-property__padding .#{$prefix}sm-properties::after {
     content: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBpZD0iZTkzOWQwODYtNjM4Zi00OTk2LTg3ZmMtYzhmOGUyZTc2ZWQ4IiBkYXRhLW5hbWU9IkxheWVyIDEiIHdpZHRoPSI3MCIgaGVpZ2h0PSI0MCI+PHJlY3Qgd2lkdGg9IjcwIiBoZWlnaHQ9IjQwIiBmaWxsPSJyZ2JhKDAsMCwwLDAuMSkiIHN0cm9rZT0icmdiYSgwLDAsMCwwLjUpIi8+PC9zdmc+");
     position: absolute;
     left: 30%;
     top: 30%;
 }
 
-##{$prefix}sm-margin-top,
-##{$prefix}sm-margin-bottom,
-##{$prefix}sm-margin-right,
-##{$prefix}sm-margin-left,
-##{$prefix}sm-padding-top,
-##{$prefix}sm-padding-bottom,
-##{$prefix}sm-padding-right,
-##{$prefix}sm-padding-left {
+.#{$prefix}sm-property__margin-top,
+.#{$prefix}sm-property__margin-bottom,
+.#{$prefix}sm-property__margin-right,
+.#{$prefix}sm-property__margin-left,
+.#{$prefix}sm-property__padding-top,
+.#{$prefix}sm-property__padding-bottom,
+.#{$prefix}sm-property__padding-right,
+.#{$prefix}sm-property__padding-left {
     flex: 999 1 60px;
 }
 
-##{$prefix}sm-margin-top,
-##{$prefix}sm-margin-bottom,
-##{$prefix}sm-margin-right,
-##{$prefix}sm-margin-left,
-##{$prefix}sm-padding-top,
-##{$prefix}sm-padding-bottom,
-##{$prefix}sm-padding-right,
-##{$prefix}sm-padding-left {
+.#{$prefix}sm-property__margin-top,
+.#{$prefix}sm-property__margin-bottom,
+.#{$prefix}sm-property__margin-right,
+.#{$prefix}sm-property__margin-left,
+.#{$prefix}sm-property__padding-top,
+.#{$prefix}sm-property__padding-bottom,
+.#{$prefix}sm-property__padding-right,
+.#{$prefix}sm-property__padding-left {
     max-width: 70px;
     flex: 999 1 60px;
 }
 
-##{$prefix}sm-top .#{$prefix}sm-label,
-##{$prefix}sm-bottom .#{$prefix}sm-label,
-##{$prefix}sm-right .#{$prefix}sm-label,
-##{$prefix}sm-left .#{$prefix}sm-label,
-##{$prefix}sm-margin-top .#{$prefix}sm-label,
-##{$prefix}sm-margin-bottom .#{$prefix}sm-label,
-##{$prefix}sm-margin-right .#{$prefix}sm-label,
-##{$prefix}sm-margin-left .#{$prefix}sm-label,
-##{$prefix}sm-padding-top .#{$prefix}sm-label,
-##{$prefix}sm-padding-bottom .#{$prefix}sm-label,
-##{$prefix}sm-padding-right .#{$prefix}sm-label,
-##{$prefix}sm-padding-left .#{$prefix}sm-label {
+.#{$prefix}sm-property__top .#{$prefix}sm-label,
+.#{$prefix}sm-property__bottom .#{$prefix}sm-label,
+.#{$prefix}sm-property__right .#{$prefix}sm-label,
+.#{$prefix}sm-property__left .#{$prefix}sm-label,
+.#{$prefix}sm-property__margin-top .#{$prefix}sm-label,
+.#{$prefix}sm-property__margin-bottom .#{$prefix}sm-label,
+.#{$prefix}sm-property__margin-right .#{$prefix}sm-label,
+.#{$prefix}sm-property__margin-left .#{$prefix}sm-label,
+.#{$prefix}sm-property__padding-top .#{$prefix}sm-label,
+.#{$prefix}sm-property__padding-bottom .#{$prefix}sm-label,
+.#{$prefix}sm-property__padding-right .#{$prefix}sm-label,
+.#{$prefix}sm-property__padding-left .#{$prefix}sm-label {
     display: none;
 }
 
-##{$prefix}sm-margin-top .#{$prefix}field,
-##{$prefix}sm-margin-bottom .#{$prefix}field,
-##{$prefix}sm-margin-right .#{$prefix}field,
-##{$prefix}sm-margin-left .#{$prefix}field,
-##{$prefix}sm-padding-top .#{$prefix}field,
-##{$prefix}sm-padding-bottom .#{$prefix}field,
-##{$prefix}sm-padding-right .#{$prefix}field,
-##{$prefix}sm-padding-left .#{$prefix}field {
+.#{$prefix}sm-property__margin-top .#{$prefix}field,
+.#{$prefix}sm-property__margin-bottom .#{$prefix}field,
+.#{$prefix}sm-property__margin-right .#{$prefix}field,
+.#{$prefix}sm-property__margin-left .#{$prefix}field,
+.#{$prefix}sm-property__padding-top .#{$prefix}field,
+.#{$prefix}sm-property__padding-bottom .#{$prefix}field,
+.#{$prefix}sm-property__padding-right .#{$prefix}field,
+.#{$prefix}sm-property__padding-left .#{$prefix}field {
     background-color: transparent;
 }
 
-##{$prefix}sm-margin-left,
-##{$prefix}sm-padding-left {
+.#{$prefix}sm-property__margin-left,
+.#{$prefix}sm-property__padding-left {
     margin-left: -15px;
     order: 2;
 }
 
-##{$prefix}sm-margin-right,
-##{$prefix}sm-padding-right {
+.#{$prefix}sm-property__margin-right,
+.#{$prefix}sm-property__padding-right {
     margin-left: 54px;
     margin-right: -15px;
     order: 3;
 }
 
-##{$prefix}sm-bottom,
-##{$prefix}sm-margin-bottom,
-##{$prefix}sm-padding-bottom {
+.#{$prefix}sm-property__bottom,
+.#{$prefix}sm-property__margin-bottom,
+.#{$prefix}sm-property__padding-bottom {
     order: 4;
     margin-left: 25%;
     margin-right: 25%;
 }
 
-##{$prefix}sm-top,
-##{$prefix}sm-margin-top,
-##{$prefix}sm-padding-top {
+.#{$prefix}sm-property__top,
+.#{$prefix}sm-property__margin-top,
+.#{$prefix}sm-property__padding-top {
     margin-left: 28.5%;
     margin-right: 25%;
 }

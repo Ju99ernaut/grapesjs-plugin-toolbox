@@ -326,9 +326,7 @@ export default (editor, opts = {}) => {
 
     // Add Settings Sector
     if (options.traitsInSm) {
-      let traitsSector = $(`<div class="${pfx}sm-sector no-select">
-      <div class="${pfx}sm-title"><span class="icon-settings fa fa-cog"></span> Settings</div>
-      <div class="${pfx}sm-properties" style="display: none;"></div></div>`);
+      const traitsSector = $(`<div class="${pfx}sm-sector ${pfx}one-bg no-select" style="max-height: calc(100% - 125px);overflow: auto;"><div class="${pfx}sm-sector-title ${pfx}sm-title"><div class="icon-settings fa fa-cog"></div><div class="${pfx}sm-sector-label">Settings</div></div><div class="${pfx}sm-properties" style="display: none;"></div></div>`);
       const traitsProps = traitsSector.find(`.${pfx}sm-properties`);
       traitsProps.append($(`.${pfx}trt-traits`));
       $(`.${pfx}sm-sectors`).before(traitsSector);
