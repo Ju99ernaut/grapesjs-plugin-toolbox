@@ -68,8 +68,11 @@ export default (editor, opts = {}) => {
       hideOnZoom: 1,
       // Add settings to style manager
       traitsInSm: 1,
+      // Wrapper icon
+      wrapperIcon: 0,
       // Icons Map
-      icons: [{
+      icons: [],
+      defIcons: [{
         type: 'body',
         icon: '<i class="fa fa-cubes"></i>'
       },
@@ -312,20 +315,25 @@ export default (editor, opts = {}) => {
     const cmp = editor.Components;
 
     //? Map layer icons to components
+    options.defIcons.forEach(icon => {
+      try {
+        cmp.getType(icon.type).model.prototype.defaults.icon = icon.icon;
+      } catch (error) { }
+    })
     options.icons.forEach(icon => {
       try {
         cmp.getType(icon.type).model.prototype.defaults.icon = icon.icon;
       } catch (error) { }
     });
 
-    // Load and show settings and style manager
-    const openTmBtn = pn.getButton('views', 'open-tm');
-    openTmBtn && openTmBtn.set('active', 1);
-    const openSm = pn.getButton('views', 'open-sm');
-    openSm && openSm.set('active', 1);
-
     // Add Settings Sector
     if (options.traitsInSm) {
+      // Load and show settings and style manager
+      const openTmBtn = pn.getButton('views', 'open-tm');
+      openTmBtn && openTmBtn.set('active', 1);
+      const openSm = pn.getButton('views', 'open-sm');
+      openSm && openSm.set('active', 1);
+
       const traitsSector = $(`<div class="${pfx}sm-sector ${pfx}one-bg no-select" style="max-height: calc(100% - 125px);overflow: auto;"><div class="${pfx}sm-sector-title ${pfx}sm-title"><div class="icon-settings fa fa-cog"></div><div class="${pfx}sm-sector-label">Settings</div></div><div class="${pfx}sm-properties" style="display: none;"></div></div>`);
       const traitsProps = traitsSector.find(`.${pfx}sm-properties`);
       traitsProps.append($(`.${pfx}trt-traits`));
@@ -344,9 +352,11 @@ export default (editor, opts = {}) => {
     }
 
     // Body icon
-    const openLm = pn.getButton('views', 'open-layers');
-    openLm && openLm.set('active', 1);
-    $(`.${pfx}layer-name`)[0].innerHTML = '<i class="fa fa-cubes"></i> Body';
-    openSm && openSm.set('active', 1);
+    if (options.wrapperIcon) {
+      const openLm = pn.getButton('views', 'open-layers');
+      openLm && openLm.set('active', 1);
+      $(`.${pfx}layer-name`)[0].innerHTML = '<i class="fa fa-cubes"></i> Body';
+      openSm && openSm.set('active', 1);
+    }
   });
 };
