@@ -29,6 +29,8 @@ export default (editor, opts = {}) => {
       gridCellClass: 'grid-cell',
       // cell item class name
       cellItemClass: 'cell-item',
+      // add palette
+      palette: 1,
       // add palette command
       commandId: 'add-palette',
       // add palette modal label
@@ -304,7 +306,7 @@ export default (editor, opts = {}) => {
   // Add breadcrumbs
   options.breadcrumbs && breadcrumbs(editor, options);
   // Add palette
-  palette(editor, options);
+  options.palette && palette(editor, options);
   // Load resizer
   options.resizer && resizer(editor, options);
 
